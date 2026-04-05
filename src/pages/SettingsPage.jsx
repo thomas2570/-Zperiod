@@ -23,25 +23,36 @@ export default function SettingsPage() {
     dispatch({ type: 'SET_ANIMATION_SPEED', payload: parseFloat(e.target.value) });
   };
 
-  const handleSendSuggestion = () => {
+  const handleSendSuggestion = async () => {
     if (!suggestion.trim() || isSending) return;
     
     setIsSending(true);
     
-    // Construct mailto link
-    const subject = encodeURIComponent(`Zperiod Suggestion: ${suggestionTopic}`);
-    const body = encodeURIComponent(suggestion);
-    const mailtoUrl = `mailto:thomasramesh449@gmail.com?subject=${subject}&body=${body}`;
-    
-    // Simulate sending delay then open mail client
-    setTimeout(() => {
-      window.location.href = mailtoUrl;
+    try {
+      const response = await fetch('https://formspree.io/f/mnjoogrd', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          topic: suggestionTopic,
+          suggestion: suggestion,
+          _subject: `Zperiod Suggestion: ${suggestionTopic}`
+        })
+      });
+
+      if (response.ok) {
+        setIsSent(true);
+        setSuggestion('');
+        // Reset "Sent" state after 3 seconds
+        setTimeout(() => setIsSent(false), 3000);
+      } else {
+        alert("Failed to send suggestion. Please try again later.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred. Check your connection.");
+    } finally {
       setIsSending(false);
-      setIsSent(true);
-      setSuggestion('');
-      // Reset "Sent" state after 3 seconds
-      setTimeout(() => setIsSent(false), 3000);
-    }, 1200);
+    }
   };
 
   return (
