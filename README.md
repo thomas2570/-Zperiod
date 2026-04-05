@@ -1,5 +1,46 @@
 # React + Vite
 
+# 🌸 ZPeriod – Period Tracking Web App  
+
+🔗 **Live Demo:** https://zperiod.vercel.app/  
+📂 **GitHub Repo:** https://github.com/thomas2570/-Zperiod  
+
+---
+
+## 📌 About The Project  
+
+**ZPeriod** is a simple and user-friendly web application designed to help users track their menstrual cycle and predict upcoming periods.  
+
+The goal of this project is to provide a **lightweight, accessible, and easy-to-use solution** for menstrual health tracking without unnecessary complexity.  
+
+---
+
+## ✨ Features  
+
+- 📅 Track menstrual cycle easily  
+- 🔮 Predict next period dates  
+- 🧮 Simple date-based calculation logic  
+- 🎨 Clean and minimal UI  
+- ⚡ Fast and lightweight performance  
+- 🌐 Fully web-based (no installation required)  
+
+---
+
+## 🛠️ Tech Stack  
+
+- **Frontend:** HTML, CSS, JavaScript  
+- **Deployment:** Vercel  
+
+---
+
+## 🚀 Getting Started  
+
+Follow these steps to run the project locally:  
+
+### 1️⃣ Clone the Repository  
+```bash
+git clone https://github.com/thomas2570/-Zperiod.git
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
