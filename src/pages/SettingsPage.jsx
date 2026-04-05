@@ -8,6 +8,8 @@ export default function SettingsPage() {
   const [suggestion, setSuggestion] = useState('');
   const [suggestionTopic, setSuggestionTopic] = useState('New Tool');
   const [showAbout, setShowAbout] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [isSent, setIsSent] = useState(false);
 
   const updateUnit = (key, value) => {
     dispatch({ type: 'UPDATE_SETTING', payload: { key, value } });
@@ -19,6 +21,20 @@ export default function SettingsPage() {
 
   const updateSpeed = (e) => {
     dispatch({ type: 'SET_ANIMATION_SPEED', payload: parseFloat(e.target.value) });
+  };
+
+  const handleSendSuggestion = () => {
+    if (!suggestion.trim() || isSending) return;
+    
+    setIsSending(true);
+    // Simulate sending delay
+    setTimeout(() => {
+      setIsSending(false);
+      setIsSent(true);
+      setSuggestion('');
+      // Reset "Sent" state after 3 seconds
+      setTimeout(() => setIsSent(false), 3000);
+    }, 1500);
   };
 
   return (
@@ -201,15 +217,36 @@ export default function SettingsPage() {
                 }}
               />
               <button 
+                onClick={handleSendSuggestion}
+                disabled={isSending || !suggestion.trim()}
                 style={{
                   position: 'absolute', bottom: 12, right: 12,
-                  background: '#111827', color: '#fff', border: 'none', padding: '10px 20px',
-                  borderRadius: 12, fontWeight: 700, fontSize: 14, cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                  background: isSent ? '#10b981' : '#111827', 
+                  color: '#fff', border: 'none', padding: '10px 20px',
+                  borderRadius: 12, fontWeight: 700, fontSize: 14, 
+                  cursor: (isSending || !suggestion.trim()) ? 'not-allowed' : 'pointer',
+                  display: 'flex', alignItems: 'center', gap: 8, 
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                  transition: '0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  opacity: (!suggestion.trim() && !isSending && !isSent) ? 0.5 : 1
                 }}
               >
-                Send
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                {isSending ? (
+                  <>
+                    <svg className="animate-spin" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/></svg>
+                    Sending...
+                  </>
+                ) : isSent ? (
+                  <>
+                    <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                    Sent!
+                  </>
+                ) : (
+                  <>
+                    Send
+                    <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                  </>
+                )}
               </button>
             </div>
           </div>
