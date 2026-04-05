@@ -48,18 +48,18 @@ export default function SettingsPage() {
             </div>
           </motion.div>
 
-          {/* Buy Me a Coffee */}
+          {/* Portfolio Card */}
           <motion.div 
-            onClick={() => window.open('https://buymeacoffee.com/thomasramesh', '_blank')}
+            onClick={() => window.open('https://thomasramesh.netlify.app/', '_blank')}
             whileHover={{ y: -2 }} 
             style={cardStyle}
           >
             <div style={iconBoxStyle('#fef3c7', '#d97706')}>
-              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M20.2 7c-.4-1.2-1.3-2.1-2.5-2.5C16.8 4 14.5 4 12 4s-4.8 0-5.7.5c-1.2.4-2.1 1.3-2.5 2.5C3.3 8.2 3.3 10 3.3 12s0 3.8.5 5c.4 1.2 1.3 2.1 2.5 2.5.9.5 3.2.5 5.7.5s4.8 0 5.7-.5c1.2-.4 2.1-1.3 2.5-2.5.5-1.2.5-3 .5-5s0-3.8-.5-5zM12 16c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z"/></svg>
+              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 700, color: '#111827' }}>Buy Me a Coffee</div>
-              <div style={{ fontSize: 13, color: '#6b7280' }}>Support development</div>
+              <div style={{ fontWeight: 700, color: '#111827' }}>Portfolio</div>
+              <div style={{ fontSize: 13, color: '#6b7280' }}>My professional work</div>
             </div>
             <svg width="16" height="16" fill="none" stroke="#9ca3af" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg>
           </motion.div>
