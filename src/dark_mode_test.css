@@ -1,0 +1,9 @@
+html.dark-theme {
+  filter: invert(1) hue-rotate(180deg);
+}
+html.dark-theme img,
+html.dark-theme canvas,
+html.dark-theme svg,
+html.dark-theme .keep-color {
+  filter: invert(1) hue-rotate(180deg);
+}
