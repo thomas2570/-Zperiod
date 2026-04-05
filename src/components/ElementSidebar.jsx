@@ -36,6 +36,16 @@ const InnerCard = ({ title, children, isGreen, isRed, isBeige }) => {
 export default function ElementSidebar() {
   const { state, dispatch } = useAppContext();
   const [tab, setTab] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  React.useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 1024;
+  const isSmallMobile = windowWidth < 640;
   const el = state.selectedElement;
 
   if (!el) return null;
@@ -48,24 +58,51 @@ export default function ElementSidebar() {
   const neutrons = Math.round((el.atomic_mass || protons * 2)) - protons;
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.25)', backdropFilter: 'blur(8px)', padding: 24 }}>
+    <div style={{ 
+      position: 'fixed', inset: 0, zIndex: 100, 
+      display: 'flex', alignItems: 'center', justifyContent: 'center', 
+      background: 'rgba(0,0,0,0.25)', backdropFilter: 'blur(8px)', 
+      padding: isMobile ? 0 : 24 
+    }}>
       
       {/* Modal Container */}
-      <div style={{ display: 'flex', width: '100%', maxWidth: 1100, height: 600, maxHeight: '90vh', background: '#fff', borderRadius: 32, overflow: 'hidden', boxShadow: '0 30px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05)' }}>
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: isMobile ? 'column' : 'row',
+        width: '100%', 
+        maxWidth: isMobile ? '100%' : 1100, 
+        height: isMobile ? '100%' : 600, 
+        maxHeight: isMobile ? '100%' : '90vh', 
+        background: '#fff', 
+        borderRadius: isMobile ? 0 : 32, 
+        overflow: 'hidden', 
+        boxShadow: isMobile ? 'none' : '0 30px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05)',
+        position: 'relative'
+      }}>
         
-        {/* === LEFT SIDEBAR === */}
-        <div style={{ width: 380, flexShrink: 0, display: 'flex', flexDirection: 'column', borderRight: '1px solid #f1f5f9', background: '#fff' }}>
+        {/* === LEFT SIDEBAR / MAIN INFO === */}
+        <div style={{ 
+          width: isMobile ? '100%' : 380, 
+          height: isMobile ? 'auto' : '100%',
+          flexShrink: 0, 
+          display: 'flex', 
+          flexDirection: 'column', 
+          borderRight: isMobile ? 'none' : '1px solid #f1f5f9', 
+          borderBottom: isMobile ? '1px solid #f1f5f9' : 'none',
+          background: '#fff',
+          overflowY: isMobile ? 'auto' : 'hidden'
+        }}>
           
           {/* Header */}
-          <div style={{ background: '#fcfaf5', padding: '24px 32px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ background: '#fcfaf5', padding: isSmallMobile ? '16px 20px' : '24px 32px 20px', display: 'flex', alignItems: 'center', gap: 16, sticky: isMobile ? 'top' : 'static', top: 0, zIndex: 20 }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-              <span style={{ fontSize: 16, fontWeight: 800, lineHeight: 1, marginBottom: 2 }}>{Math.round(el.atomic_mass || 0)}</span>
-              <span style={{ fontSize: 16, fontWeight: 800, lineHeight: 1 }}>{el.number}</span>
+              <span style={{ fontSize: isSmallMobile ? 12 : 16, fontWeight: 800, lineHeight: 1, marginBottom: 2 }}>{Math.round(el.atomic_mass || 0)}</span>
+              <span style={{ fontSize: isSmallMobile ? 12 : 16, fontWeight: 800, lineHeight: 1 }}>{el.number}</span>
             </div>
-            <div style={{ fontSize: 56, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em', color: '#111827' }}>
+            <div style={{ fontSize: isSmallMobile ? 40 : 56, fontWeight: 900, lineHeight: 1, letterSpacing: '-0.03em', color: '#111827' }}>
               {el.symbol}
             </div>
-            <div style={{ fontSize: 20, fontWeight: 800, color: '#111827', marginLeft: 'auto' }}>
+            <div style={{ fontSize: isSmallMobile ? 16 : 20, fontWeight: 800, color: '#111827', marginLeft: 'auto' }}>
               {el.name}
             </div>
           </div>          {/* Content Area based on Tab */}
@@ -210,11 +247,32 @@ export default function ElementSidebar() {
         </div>
 
         {/* === RIGHT SIDEBAR (3D MODEL) === */}
-        <div style={{ flex: 1, position: 'relative', background: '#fff' }}>
+        <div style={{ 
+          flex: 1, 
+          position: 'relative', 
+          background: '#fff',
+          height: isMobile ? 350 : '100%',
+          borderTop: isMobile ? '1px solid #f1f5f9' : 'none'
+        }}>
           {/* Close button */}
           <button 
             onClick={() => dispatch({ type: 'SELECT_ELEMENT', payload: null })}
-            style={{ position: 'absolute', top: 24, right: 24, zIndex: 100, width: 32, height: 32, borderRadius: '50%', background: '#f1f5f9', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}
+            style={{ 
+              position: 'absolute', 
+              top: isMobile ? 16 : 24, 
+              right: isMobile ? 16 : 24, 
+              zIndex: 100, 
+              width: 32, 
+              height: 32, 
+              borderRadius: '50%', 
+              background: '#f1f5f9', 
+              border: 'none', 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              color: '#64748b' 
+            }}
           >
             <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>

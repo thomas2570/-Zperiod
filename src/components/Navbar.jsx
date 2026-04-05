@@ -35,10 +35,13 @@ export default function Navbar() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: 60,
-        padding: '0 24px',
+        height: 'auto',
+        minHeight: 60,
+        padding: '12px 24px',
         maxWidth: 1600,
         margin: '0 auto',
+        flexWrap: 'wrap',
+        gap: 16,
       }}>
 
         {/* ── Logo ── */}
@@ -58,15 +61,18 @@ export default function Navbar() {
 
         {/* ── Center Nav ── */}
         <nav style={{
-          position: 'absolute',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex', alignItems: 'center', gap: 2,
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: 2,
           background: '#f1f5f9',
           borderRadius: 999,
           padding: '4px 6px',
           border: '1px solid #e2e8f0',
-        }}>
+          overflowX: 'auto',
+          maxWidth: '100vw',
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none'
+        }} className="hide-scrollbar">
           {[
             { to: '/', label: 'Table', end: true },
             { to: '/ions', label: 'Ions', end: false },

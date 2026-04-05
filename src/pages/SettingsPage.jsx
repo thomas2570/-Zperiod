@@ -10,6 +10,15 @@ export default function SettingsPage() {
   const [showAbout, setShowAbout] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  React.useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 768;
 
   const updateUnit = (key, value) => {
     dispatch({ type: 'UPDATE_SETTING', payload: { key, value } });
@@ -59,10 +68,16 @@ export default function SettingsPage() {
     <div style={{ 
       minHeight: '100vh', 
       background: 'radial-gradient(ellipse 80% 60% at 50% 100%, #fcfaf5 0%, transparent 60%), #fbfbfb',
-      padding: '40px 24px 100px',
+      padding: isMobile ? '24px 16px 80px' : '40px 24px 100px',
       fontFamily: "'Inter', sans-serif"
     }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.5fr', gap: 32 }}>
+      <div style={{ 
+        maxWidth: 1200, 
+        margin: '0 auto', 
+        display: 'grid', 
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 1.5fr', 
+        gap: isMobile ? 24 : 32 
+      }}>
         
         {/* === LEFT COLUMN === */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
@@ -159,11 +174,11 @@ export default function SettingsPage() {
           
           {/* Global Units */}
           <div style={sectionBoxStyle}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 48 }}>
-              <div style={iconBoxStyle('#ecfdf5', '#059669', 40)}>
-                <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: isMobile ? 24 : 48 }}>
+              <div style={iconBoxStyle('#ecfdf5', '#059669', isMobile ? 32 : 40)}>
+                <svg width={isMobile ? 16 : 20} height={isMobile ? 16 : 20} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
               </div>
-              <h3 style={{ fontSize: 18, fontWeight: 700, color: '#111827' }}>Global Units</h3>
+              <h3 style={{ fontSize: isMobile ? 16 : 18, fontWeight: 700, color: '#111827' }}>Global Units</h3>
             </div>
 
             {[
@@ -171,9 +186,9 @@ export default function SettingsPage() {
               { label: 'Density', key: 'density', options: ['g/cm³', 'kg/m³', 'lb/ft³'] },
               { label: 'Energy', key: 'energy', options: ['kJ/mol', 'eV'] },
             ].map((row) => (
-              <div key={row.key} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
+              <div key={row.key} style={{ display: 'flex', alignItems: isMobile ? 'flex-start' : 'center', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'space-between', marginBottom: 32, gap: 12 }}>
                 <span style={{ fontWeight: 600, color: '#374151', fontSize: 15 }}>{row.label}</span>
-                <div style={{ display: 'flex', background: '#f1f5f9', borderRadius: 999, padding: 4, gap: 4 }}>
+                <div style={{ display: 'flex', background: '#f1f5f9', borderRadius: 999, padding: 4, gap: 4, width: isMobile ? '100%' : 'auto', overflowX: 'auto' }}>
                   {row.options.map((opt) => {
                     const isActive = units[row.key] === opt.replace('³', '3'); // normalized
                     return (
@@ -181,11 +196,13 @@ export default function SettingsPage() {
                         key={opt}
                         onClick={() => updateUnit(row.key, opt.replace('³', '3'))}
                         style={{
+                          flex: isMobile ? 1 : 'none',
                           padding: '6px 16px', borderRadius: 999, border: 'none', fontSize: 13, fontWeight: 700,
                           cursor: 'pointer', transition: '0.2s',
                           background: isActive ? '#fff' : 'transparent',
                           color: isActive ? '#111827' : '#94a3b8',
-                          boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.1)' : 'none'
+                          boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.1)' : 'none',
+                          whiteSpace: 'nowrap'
                         }}
                       >
                         {opt}
@@ -297,15 +314,16 @@ export default function SettingsPage() {
             onClick={(e) => e.stopPropagation()}
             style={{
               background: '#fff', width: '100%', maxWidth: 450,
-              borderRadius: 32, padding: 40, position: 'relative',
+              borderRadius: isMobile ? 24 : 32, padding: isMobile ? '32px 24px' : 40, position: 'relative',
               boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25)',
-              textAlign: 'center'
+              textAlign: 'center',
+              maxHeight: '90vh', overflowY: 'auto'
             }}
           >
             <button 
               onClick={() => setShowAbout(false)}
               style={{
-                position: 'absolute', top: 20, right: 20,
+                position: 'absolute', top: isMobile ? 12 : 20, right: isMobile ? 12 : 20,
                 background: '#f1f5f9', border: 'none', width: 32, height: 32,
                 borderRadius: '50%', cursor: 'pointer', display: 'flex',
                 alignItems: 'center', justifyContent: 'center', color: '#64748b'
@@ -314,7 +332,7 @@ export default function SettingsPage() {
               <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
 
-            <h2 style={{ fontSize: 32, fontWeight: 900, color: '#1e1b4b', marginBottom: 16 }}>Thomas Ramesh</h2>
+            <h2 style={{ fontSize: isMobile ? 24 : 32, fontWeight: 900, color: '#1e1b4b', marginBottom: 16 }}>Thomas Ramesh</h2>
             
             <div style={{ 
               display: 'inline-block', background: '#eef2ff', color: '#4338ca',
@@ -354,10 +372,10 @@ export default function SettingsPage() {
                 display: 'flex', alignItems: 'center', gap: 16,
                 boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
               }}>
-                <div style={{ width: 32, height: 32, borderRadius: 8, background: '#eef2ff', color: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ width: 32, height: 32, borderRadius: 8, background: '#eef2ff', color: '#6366f1', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" /></svg>
                 </div>
-                <span style={{ fontSize: 14, fontWeight: 600, color: '#475569' }}>thomasramesh449@gmail.com</span>
+                <span style={{ fontSize: isMobile ? 12 : 14, fontWeight: 600, color: '#475569', wordBreak: 'break-all' }}>thomasramesh449@gmail.com</span>
               </div>
             </div>
 

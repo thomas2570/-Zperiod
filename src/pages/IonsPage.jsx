@@ -1,20 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ION_CATEGORIES } from '../data/ions';
 
 export default function IonsPage() {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  React.useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 768;
+
   return (
     <div style={{ 
       minHeight: '100vh', 
       background: 'radial-gradient(ellipse 80% 60% at 50% 100%, #fcfaf5 0%, transparent 60%), #fbfbfb',
-      padding: '40px 24px 100px',
+      padding: isMobile ? '24px 16px 80px' : '40px 24px 100px',
       fontFamily: "'Inter', sans-serif"
     }}>
       <div style={{ maxWidth: 1400, margin: '0 auto' }}>
         
-        {/* Header (Optional but good for SEO/Context) */}
-        <div style={{ marginBottom: 48, textAlign: 'center' }}>
-          <h1 style={{ fontSize: 32, fontWeight: 800, color: '#111827', letterSpacing: '-0.025em', marginBottom: 8 }}>
+        {/* Header */}
+        <div style={{ marginBottom: isMobile ? 32 : 48, textAlign: 'center' }}>
+          <h1 style={{ fontSize: isMobile ? 24 : 32, fontWeight: 800, color: '#111827', letterSpacing: '-0.025em', marginBottom: 8 }}>
             Common Ions
           </h1>
           <p style={{ fontSize: 13, fontWeight: 600, color: '#6b7280', letterSpacing: '0.05em', textTransform: 'uppercase' }}>

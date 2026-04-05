@@ -64,13 +64,18 @@ export default function FilterBar() {
         })}
       </div>
 
-      {/* Search input */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      {/* Search input and Reset */}
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: 10, 
+        flexWrap: 'wrap' 
+      }}>
         <div style={{
           display: 'flex', alignItems: 'center', gap: 8,
           background: '#fff', border: '1px solid #e2e8f0',
           borderRadius: 10, padding: '8px 14px',
-          flex: 1, maxWidth: 320,
+          flex: '1 1 300px', maxWidth: '100%',
           boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
         }}>
           <svg width="14" height="14" fill="none" stroke="#9ca3af" strokeWidth="2" viewBox="0 0 24 24">
@@ -108,9 +113,10 @@ export default function FilterBar() {
               padding: '8px 14px', borderRadius: 9, border: '1px solid #e2e8f0',
               background: '#fff', fontSize: 12, fontWeight: 600, color: '#6b7280',
               cursor: 'pointer', fontFamily: "'Inter', sans-serif",
+              whiteSpace: 'nowrap'
             }}
           >
-            Reset
+            Reset filter
           </button>
         )}
       </div>
