@@ -27,14 +27,21 @@ export default function SettingsPage() {
     if (!suggestion.trim() || isSending) return;
     
     setIsSending(true);
-    // Simulate sending delay
+    
+    // Construct mailto link
+    const subject = encodeURIComponent(`Zperiod Suggestion: ${suggestionTopic}`);
+    const body = encodeURIComponent(suggestion);
+    const mailtoUrl = `mailto:thomasramesh449@gmail.com?subject=${subject}&body=${body}`;
+    
+    // Simulate sending delay then open mail client
     setTimeout(() => {
+      window.location.href = mailtoUrl;
       setIsSending(false);
       setIsSent(true);
       setSuggestion('');
       // Reset "Sent" state after 3 seconds
       setTimeout(() => setIsSent(false), 3000);
-    }, 1500);
+    }, 1200);
   };
 
   return (
