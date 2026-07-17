@@ -99,7 +99,7 @@ export default function SettingsPage() {
 
           {/* Portfolio Card */}
           <motion.div 
-            onClick={() => window.open('https://thomasramesh.netlify.app/', '_blank')}
+            onClick={() => window.open('https://thomasramesh.vercel.app/', '_blank')}
             whileHover={{ y: -2 }} 
             style={cardStyle}
           >
