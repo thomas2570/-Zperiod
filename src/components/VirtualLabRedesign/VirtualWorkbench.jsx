@@ -315,10 +315,10 @@ export default function VirtualWorkbench() {
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 20, opacity: 1 }}
                 exit={{ y: -50, opacity: 0 }}
-                className={`absolute top-0 left-1/2 -translate-x-1/2 z-20 px-8 py-3 rounded-full border shadow-2xl font-mono text-lg font-bold backdrop-blur-md
+                className={`absolute top-4 left-1/2 -translate-x-1/2 z-20 px-10 py-4 rounded-2xl border shadow-2xl font-mono text-xl font-extrabold backdrop-blur-xl transition-all duration-500
                   ${activeElement.type === 'exotic' 
-                     ? 'bg-[#0a0d14]/80 text-[#00e5ff] border-[#00e5ff]/50 shadow-[0_0_40px_rgba(0,229,255,0.3)]' 
-                     : 'bg-slate-900 text-white border-slate-700'
+                     ? 'bg-[#0a0d14]/70 text-[#00e5ff] border-[#00e5ff]/60 shadow-[0_0_50px_rgba(0,229,255,0.4)]' 
+                     : 'bg-slate-900/80 text-white border-slate-600 shadow-[0_0_30px_rgba(255,255,255,0.1)]'
                   }
                 `}
               >
@@ -340,33 +340,33 @@ export default function VirtualWorkbench() {
           </div>
 
           {/* Left Vertical Slider (Temperature) */}
-          <div className="absolute left-8 top-1/2 -translate-y-1/2 bg-slate-900/80 backdrop-blur-md rounded-full py-6 px-3 shadow-2xl border border-slate-700 flex flex-col items-center gap-4 z-10">
-            <div className="relative h-48 w-4 bg-slate-800 rounded-full flex flex-col justify-end overflow-hidden border border-slate-700">
+          <div className="absolute left-8 top-1/2 -translate-y-1/2 bg-slate-900/60 backdrop-blur-xl rounded-full py-8 px-4 shadow-2xl border border-white/10 flex flex-col items-center gap-4 z-10">
+            <div className="relative h-48 w-4 bg-slate-950 rounded-full flex flex-col justify-end overflow-hidden border border-white/5">
                <motion.div 
                  className="w-full bg-[#00e5ff] rounded-full"
                  animate={{ height: `${((temperature - 20) / 80) * 100}%` }}
                  transition={{ duration: 0.2 }}
-                 style={{ boxShadow: '0 0 10px #00e5ff' }}
+                 style={{ boxShadow: '0 0 15px #00e5ff' }}
                />
                <motion.div 
-                 className="absolute w-6 h-6 bg-slate-900 border-2 border-[#00e5ff] rounded-full shadow-[0_0_15px_#00e5ff] -left-1"
+                 className="absolute w-6 h-6 bg-slate-900 border-2 border-[#00e5ff] rounded-full shadow-[0_0_20px_#00e5ff] -left-1"
                  animate={{ bottom: `calc(${((temperature - 20) / 80) * 100}% - 12px)` }}
                  transition={{ duration: 0.2 }}
                />
             </div>
-            <div className="text-center">
+            <div className="text-center mt-2">
               <div className="text-sm font-bold text-white font-mono">{Math.round(temperature)}°</div>
-              <div className="text-[10px] font-bold text-slate-500 tracking-widest">TEMP</div>
+              <div className="text-[10px] font-bold text-slate-400 tracking-widest mt-1">TEMP</div>
             </div>
           </div>
 
           {/* Bottom Left Heater Control */}
-          <div className="absolute bottom-8 left-8 bg-slate-900/80 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-slate-700 min-w-[160px] z-10">
-             <div className="text-[10px] font-bold text-slate-400 mb-3 text-center tracking-widest">HEATER</div>
+          <div className="absolute bottom-8 left-8 bg-slate-900/60 backdrop-blur-xl rounded-2xl p-5 shadow-2xl border border-white/10 min-w-[180px] z-10">
+             <div className="text-[10px] font-bold text-slate-400 mb-4 text-center tracking-widest uppercase">Thermal Control</div>
              <div className="flex items-center gap-4">
                <button 
                  onClick={() => setHeaterOn(!heaterOn)}
-                 className={`flex items-center justify-center w-12 h-8 rounded-lg text-sm font-bold transition-all border ${heaterOn ? 'bg-[#00e5ff]/20 text-[#00e5ff] border-[#00e5ff]/50 shadow-[0_0_15px_rgba(0,229,255,0.4)]' : 'bg-slate-800 text-slate-500 border-slate-700'}`}
+                 className={`flex items-center justify-center w-14 h-10 rounded-xl text-sm font-extrabold transition-all border ${heaterOn ? 'bg-[#00e5ff]/20 text-[#00e5ff] border-[#00e5ff]/50 shadow-[0_0_20px_rgba(0,229,255,0.4)]' : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10 hover:text-slate-200'}`}
                >
                  {heaterOn ? 'ON' : 'OFF'}
                </button>
@@ -375,7 +375,7 @@ export default function VirtualWorkbench() {
                  min="0" max="100" 
                  value={heaterIntensity}
                  onChange={e => setHeaterIntensity(Number(e.target.value))}
-                 className="w-full accent-[#00e5ff]"
+                 className="w-full accent-[#00e5ff] cursor-pointer"
                />
              </div>
           </div>
@@ -384,20 +384,20 @@ export default function VirtualWorkbench() {
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 z-10">
              <button 
                onClick={handleAddWater}
-               className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl shadow-lg border border-slate-700 transition-all flex items-center gap-2"
+               className="px-6 py-3.5 bg-white/5 hover:bg-white/10 backdrop-blur-xl text-white font-bold rounded-2xl shadow-xl border border-white/10 transition-all flex items-center gap-2"
              >
                + Inject Fluid/Plasma
              </button>
              <button 
                onClick={handleReset}
-               className="px-6 py-3 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-bold rounded-xl shadow-lg border border-rose-500/30 transition-all flex items-center gap-2"
+               className="px-6 py-3.5 bg-rose-500/10 hover:bg-rose-500/20 backdrop-blur-xl text-rose-400 font-bold rounded-2xl shadow-xl border border-rose-500/20 transition-all flex items-center gap-2"
              >
                🔄 Reset Simulation
              </button>
              <div className="relative">
                <button 
                  onClick={() => setShowElementMenu(!showElementMenu)}
-                 className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl shadow-lg border border-slate-700 transition-all flex items-center gap-2"
+                 className="px-6 py-3.5 bg-white/5 hover:bg-white/10 backdrop-blur-xl text-white font-bold rounded-2xl shadow-xl border border-white/10 transition-all flex items-center gap-2"
                >
                  ⚛️ Field Element
                </button>
@@ -409,16 +409,16 @@ export default function VirtualWorkbench() {
                      initial={{ opacity: 0, y: 10 }}
                      animate={{ opacity: 1, y: 0 }}
                      exit={{ opacity: 0, y: 10 }}
-                     className="absolute bottom-full mb-2 left-0 w-full bg-slate-800 rounded-xl shadow-2xl border border-slate-700 p-2 flex flex-col gap-1"
+                     className="absolute bottom-full mb-3 left-0 w-full bg-slate-900/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 p-2 flex flex-col gap-1"
                    >
                      {ELEMENTS.map(el => (
                        <button 
                          key={el.id}
                          onClick={() => { setActiveElement(el); setShowElementMenu(false); }}
-                         className={`p-3 rounded-lg font-bold text-sm text-left border border-transparent transition-all
+                         className={`p-3 rounded-xl font-bold text-sm text-left border border-transparent transition-all
                            ${activeElement.id === el.id 
-                              ? `bg-slate-900 border-${el.color}` 
-                              : 'hover:bg-slate-700 text-slate-300'
+                              ? `bg-slate-800 border-${el.color}` 
+                              : 'hover:bg-white/10 text-slate-300'
                            }`}
                          style={{ borderColor: activeElement.id === el.id ? el.color : 'transparent', color: activeElement.id === el.id ? el.color : '' }}
                        >
