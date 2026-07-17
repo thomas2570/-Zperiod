@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import TopTabBar from '../components/VirtualLabRedesign/TopTabBar';
 import PeriodicTable from '../components/VirtualLabRedesign/ElementsExplorer/PeriodicTable';
 import PlaceholderTab from '../components/VirtualLabRedesign/PlaceholderTab';
+import ExperimentsTab from '../components/VirtualLabRedesign/ExperimentsTab/ExperimentsTab';
+import MixturesTab from '../components/VirtualLabRedesign/MixturesTab/MixturesTab';
 
 export default function VirtualLabPage() {
   const [activeTab, setActiveTab] = useState('elements');
@@ -22,9 +24,9 @@ export default function VirtualLabPage() {
       case 'lab':
         return <PlaceholderTab title="Virtual Workbench" description="Interactive 3D laboratory workbench with drag-and-drop equipment and live chemical reactions." icon="🧪" />;
       case 'experiments':
-        return <PlaceholderTab title="Guided Experiments" description="Step-by-step interactive experiments with live data logging and PDF reports." icon="🔥" />;
+        return <ExperimentsTab />;
       case 'mixtures':
-        return <PlaceholderTab title="Mixtures & Solutions" description="Simulate mixtures, solubility rules, and complex separation methods." icon="🧬" />;
+        return <MixturesTab />;
       default:
         return <PeriodicTable />;
     }
