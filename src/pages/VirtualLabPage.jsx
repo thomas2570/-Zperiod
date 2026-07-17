@@ -4,9 +4,10 @@ import PeriodicTable from '../components/VirtualLabRedesign/ElementsExplorer/Per
 import PlaceholderTab from '../components/VirtualLabRedesign/PlaceholderTab';
 import ExperimentsTab from '../components/VirtualLabRedesign/ExperimentsTab/ExperimentsTab';
 import MixturesTab from '../components/VirtualLabRedesign/MixturesTab/MixturesTab';
+import ThermalShockSimulator from '../components/VirtualLabRedesign/ThermalShockSimulator';
 
 export default function VirtualLabPage() {
-  const [activeTab, setActiveTab] = useState('elements');
+  const [activeTab, setActiveTab] = useState('lab');
 
   // Background Grid Pattern (CSS SVG)
   const gridBackground = {
@@ -22,7 +23,7 @@ export default function VirtualLabPage() {
       case 'equations':
         return <PlaceholderTab title="Equations & Balancer" description="Live equation balancer, stoichiometry solver, and reaction predictor." icon="⚖️" />;
       case 'lab':
-        return <PlaceholderTab title="Virtual Workbench" description="Interactive 3D laboratory workbench with drag-and-drop equipment and live chemical reactions." icon="🧪" />;
+        return <ThermalShockSimulator />;
       case 'experiments':
         return <ExperimentsTab />;
       case 'mixtures':
