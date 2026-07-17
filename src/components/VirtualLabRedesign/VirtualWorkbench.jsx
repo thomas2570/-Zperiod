@@ -89,23 +89,24 @@ export default function VirtualWorkbench() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       const cx = canvas.width / 2;
-      const cy = canvas.height / 2 + 50;
+      const cy = canvas.height / 2 + 30; // Shifted beaker slightly up to give room for burner
       const beakerW = 140;
       const beakerH = 200;
       const beakerLeft = cx - beakerW / 2;
       const beakerTop = cy - beakerH / 2;
 
-      // Draw Burner underneath
+      // Draw Burner underneath (moved lower to prevent overlap)
+      const burnerTop = cy + beakerH / 2 + 20; 
       if (state.heaterOn) {
         ctx.fillStyle = '#1e293b';
-        ctx.fillRect(cx - 15, cy + beakerH / 2 + 10, 30, 40);
+        ctx.fillRect(cx - 15, burnerTop, 30, 40);
         ctx.fillStyle = '#0f172a';
-        ctx.fillRect(cx - 25, cy + beakerH / 2 + 45, 50, 10);
+        ctx.fillRect(cx - 25, burnerTop + 35, 50, 10);
         
-        const flameH = (state.heaterIntensity / 100) * 50;
+        const flameH = (state.heaterIntensity / 100) * 35; // Max 35px so it doesn't overlap beaker
         ctx.beginPath();
-        ctx.moveTo(cx - 10, cy + beakerH / 2 + 10);
-        ctx.quadraticCurveTo(cx, cy + beakerH / 2 + 10 - flameH - Math.random() * 10, cx + 10, cy + beakerH / 2 + 10);
+        ctx.moveTo(cx - 10, burnerTop);
+        ctx.quadraticCurveTo(cx, burnerTop - flameH - Math.random() * 10, cx + 10, burnerTop);
         ctx.fillStyle = `rgba(0, 229, 255, ${0.7 + Math.random() * 0.3})`; // Neon cyan burner flame
         ctx.fill();
       }
@@ -117,7 +118,6 @@ export default function VirtualWorkbench() {
       if (state.waterLevel > 0) {
         let waterHeight = (state.waterLevel / 100) * (beakerH - 20);
         
-        // If anti-gravity is active, the fluid block actually slowly depletes as it turns into flying particles
         if (isAntiGrav) {
            state.waterLevel = Math.max(0, state.waterLevel - 0.2); 
            waterHeight = (state.waterLevel / 100) * (beakerH - 20);
@@ -142,7 +142,6 @@ export default function VirtualWorkbench() {
           ctx.lineTo(beakerLeft + 10, cy + beakerH / 2);
           ctx.quadraticCurveTo(beakerLeft + 5, cy + beakerH / 2 - 5, beakerLeft + 5, cy + beakerH / 2 - 10);
           
-          // Fluid color
           ctx.fillStyle = isAntiGrav ? 'rgba(0, 229, 255, 0.4)' : 'rgba(59, 130, 246, 0.6)';
           ctx.fill();
         }
@@ -159,7 +158,7 @@ export default function VirtualWorkbench() {
           }
         }
         
-        // Anti-Gravity Particles (Fly out of container entirely)
+        // Anti-Gravity Particles
         if (isAntiGrav) {
            if (Math.random() < 0.8) {
              state.antiGravParticles.push({
@@ -185,7 +184,6 @@ export default function VirtualWorkbench() {
           ctx.arc(b.x, b.y, b.size, 0, Math.PI * 2);
           ctx.fill();
           
-          // Pop at surface
           if (b.y < waterY) state.bubbles.splice(i, 1);
         }
         
@@ -193,7 +191,7 @@ export default function VirtualWorkbench() {
         for (let i = state.antiGravParticles.length - 1; i >= 0; i--) {
           const p = state.antiGravParticles[i];
           p.x += p.vx;
-          p.y += p.vy; // Flies straight UP out of beaker!
+          p.y += p.vy;
           p.life -= 0.005;
           
           ctx.globalCompositeOperation = 'screen';
@@ -203,7 +201,6 @@ export default function VirtualWorkbench() {
           ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
           ctx.fill();
           
-          // Outer glow for exotic look
           ctx.fillStyle = p.color;
           ctx.globalAlpha = p.life * 0.3;
           ctx.beginPath();
@@ -213,7 +210,6 @@ export default function VirtualWorkbench() {
           ctx.globalAlpha = 1.0;
           ctx.globalCompositeOperation = 'source-over';
           
-          // Destroy when off screen
           if (p.life <= 0 || p.y < -50) state.antiGravParticles.splice(i, 1);
         }
       }
@@ -246,7 +242,6 @@ export default function VirtualWorkbench() {
         const limitY = cy + beakerH/2 - 20;
         if (state.elementY > limitY) state.elementY = limitY;
         
-        // Dissolve exotic element during antigrav
         let alpha = 1;
         if (isAntiGrav) {
            alpha = Math.max(0, state.waterLevel / 50); // Fades away as fluid depletes
@@ -294,13 +289,13 @@ export default function VirtualWorkbench() {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center p-8 bg-[#0a0d14]">
-      <div className="w-full max-w-6xl h-[85vh] bg-[#0f172a] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] flex flex-col relative overflow-hidden border border-slate-800">
+    <div className="w-full h-full flex items-center justify-center p-4 md:p-8 bg-[#0a0d14]">
+      <div className="w-full max-w-[1400px] h-[85vh] bg-[#0f172a] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] flex flex-col relative overflow-hidden border border-slate-800">
         
         {/* Top Bar */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-black/20">
-          <h2 className="text-xl font-bold text-white font-['Space_Grotesk'] tracking-wide">Antigravity & Exotic Field Theory</h2>
-          <button className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center text-slate-300 transition-colors">
+        <div className="flex items-start md:items-center justify-between px-6 py-4 border-b border-slate-800 bg-black/20 gap-4">
+          <h2 className="text-lg md:text-xl font-bold text-white font-['Space_Grotesk'] tracking-wide leading-tight break-words">Antigravity & Exotic Field Theory</h2>
+          <button className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center text-slate-300 transition-colors flex-shrink-0 mt-1 md:mt-0">
             ✕
           </button>
         </div>
@@ -315,7 +310,7 @@ export default function VirtualWorkbench() {
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 20, opacity: 1 }}
                 exit={{ y: -50, opacity: 0 }}
-                className={`absolute top-4 left-1/2 -translate-x-1/2 z-20 px-10 py-4 rounded-2xl border shadow-2xl font-mono text-xl font-extrabold backdrop-blur-xl transition-all duration-500
+                className={`absolute top-4 left-1/2 -translate-x-1/2 z-20 px-6 md:px-10 py-3 md:py-4 rounded-2xl border shadow-2xl font-mono text-sm md:text-xl font-extrabold backdrop-blur-xl transition-all duration-500 max-w-[90%] text-center break-words
                   ${activeElement.type === 'exotic' 
                      ? 'bg-[#0a0d14]/70 text-[#00e5ff] border-[#00e5ff]/60 shadow-[0_0_50px_rgba(0,229,255,0.4)]' 
                      : 'bg-slate-900/80 text-white border-slate-600 shadow-[0_0_30px_rgba(255,255,255,0.1)]'
@@ -329,7 +324,6 @@ export default function VirtualWorkbench() {
 
           {/* Canvas Background Area */}
           <div className="absolute inset-0 bg-[#0a0d14]">
-             {/* Faint CSS Grid */}
              <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)`, backgroundSize: '40px 40px' }}></div>
             <canvas 
               ref={canvasRef}
@@ -340,7 +334,7 @@ export default function VirtualWorkbench() {
           </div>
 
           {/* Left Vertical Slider (Temperature) */}
-          <div className="absolute left-8 top-1/2 -translate-y-1/2 bg-slate-900/60 backdrop-blur-xl rounded-full py-8 px-4 shadow-2xl border border-white/10 flex flex-col items-center gap-4 z-10">
+          <div className="hidden lg:flex absolute left-8 top-1/2 -translate-y-1/2 bg-slate-900/60 backdrop-blur-xl rounded-full py-8 px-4 shadow-2xl border border-white/10 flex-col items-center gap-4 z-10">
             <div className="relative h-48 w-4 bg-slate-950 rounded-full flex flex-col justify-end overflow-hidden border border-white/5">
                <motion.div 
                  className="w-full bg-[#00e5ff] rounded-full"
@@ -360,102 +354,105 @@ export default function VirtualWorkbench() {
             </div>
           </div>
 
-          {/* Bottom Left Heater Control */}
-          <div className="absolute bottom-8 left-8 bg-slate-900/60 backdrop-blur-xl rounded-2xl p-5 shadow-2xl border border-white/10 min-w-[180px] z-10">
-             <div className="text-[10px] font-bold text-slate-400 mb-4 text-center tracking-widest uppercase">Thermal Control</div>
-             <div className="flex items-center gap-4">
-               <button 
-                 onClick={() => setHeaterOn(!heaterOn)}
-                 className={`flex items-center justify-center w-14 h-10 rounded-xl text-sm font-extrabold transition-all border ${heaterOn ? 'bg-[#00e5ff]/20 text-[#00e5ff] border-[#00e5ff]/50 shadow-[0_0_20px_rgba(0,229,255,0.4)]' : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10 hover:text-slate-200'}`}
-               >
-                 {heaterOn ? 'ON' : 'OFF'}
-               </button>
-               <input 
-                 type="range" 
-                 min="0" max="100" 
-                 value={heaterIntensity}
-                 onChange={e => setHeaterIntensity(Number(e.target.value))}
-                 className="w-full accent-[#00e5ff] cursor-pointer"
-               />
-             </div>
-          </div>
-
-          {/* Bottom Center Actions */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 z-10">
-             <button 
-               onClick={handleAddWater}
-               className="px-6 py-3.5 bg-white/5 hover:bg-white/10 backdrop-blur-xl text-white font-bold rounded-2xl shadow-xl border border-white/10 transition-all flex items-center gap-2"
-             >
-               + Inject Fluid/Plasma
-             </button>
-             <button 
-               onClick={handleReset}
-               className="px-6 py-3.5 bg-rose-500/10 hover:bg-rose-500/20 backdrop-blur-xl text-rose-400 font-bold rounded-2xl shadow-xl border border-rose-500/20 transition-all flex items-center gap-2"
-             >
-               🔄 Reset Simulation
-             </button>
-             <div className="relative">
-               <button 
-                 onClick={() => setShowElementMenu(!showElementMenu)}
-                 className="px-6 py-3.5 bg-white/5 hover:bg-white/10 backdrop-blur-xl text-white font-bold rounded-2xl shadow-xl border border-white/10 transition-all flex items-center gap-2"
-               >
-                 ⚛️ Field Element
-               </button>
-               
-               {/* Element Menu Dropdown */}
-               <AnimatePresence>
-                 {showElementMenu && (
-                   <motion.div 
-                     initial={{ opacity: 0, y: 10 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     exit={{ opacity: 0, y: 10 }}
-                     className="absolute bottom-full mb-3 left-0 w-full bg-slate-900/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 p-2 flex flex-col gap-1"
-                   >
-                     {ELEMENTS.map(el => (
-                       <button 
-                         key={el.id}
-                         onClick={() => { setActiveElement(el); setShowElementMenu(false); }}
-                         className={`p-3 rounded-xl font-bold text-sm text-left border border-transparent transition-all
-                           ${activeElement.id === el.id 
-                              ? `bg-slate-800 border-${el.color}` 
-                              : 'hover:bg-white/10 text-slate-300'
-                           }`}
-                         style={{ borderColor: activeElement.id === el.id ? el.color : 'transparent', color: activeElement.id === el.id ? el.color : '' }}
-                       >
-                         {el.name} ({el.id})
-                       </button>
-                     ))}
-                   </motion.div>
-                 )}
-               </AnimatePresence>
-             </div>
-          </div>
-
-          {/* Bottom Right Element Stand */}
-          <div className="absolute bottom-12 right-24 flex flex-col items-center z-10">
-            <motion.button 
-              whileHover={{ y: -5 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={handleDropElement}
-              className="w-16 h-16 bg-slate-800 rounded-lg shadow-[0_10px_20px_rgba(0,0,0,0.5)] flex items-center justify-center border border-slate-600 cursor-pointer relative z-10 overflow-hidden"
-              style={{ borderBottomWidth: '4px' }}
-            >
-              {activeElement.type === 'exotic' && (
-                <div className="absolute inset-0 animate-pulse blur-md opacity-40" style={{ backgroundColor: activeElement.color }} />
-              )}
-              <span className="text-xl font-bold relative z-10 font-mono" style={{ color: activeElement.color }}>{activeElement.id}</span>
-            </motion.button>
+          {/* Responsive Bottom Controls Area */}
+          <div className="absolute bottom-0 left-0 w-full p-4 md:p-8 flex flex-col md:flex-row justify-between items-center md:items-end gap-6 z-10 pointer-events-none">
             
-            <div className="w-20 h-4 bg-slate-700 rounded-sm mt-1 border-t border-slate-600" />
-            <div className="flex gap-10">
-              <div className="w-3 h-8 bg-slate-800 rounded-b-sm border-l border-r border-slate-700" />
-              <div className="w-3 h-8 bg-slate-800 rounded-b-sm border-l border-r border-slate-700" />
+            {/* Bottom Left Heater Control */}
+            <div className="bg-slate-900/60 backdrop-blur-xl rounded-2xl p-5 shadow-2xl border border-white/10 w-[200px] pointer-events-auto shrink-0 hidden md:block">
+               <div className="text-[10px] font-bold text-slate-400 mb-4 text-center tracking-widest uppercase">Thermal Control</div>
+               <div className="flex items-center gap-4">
+                 <button 
+                   onClick={() => setHeaterOn(!heaterOn)}
+                   className={`flex items-center justify-center w-14 h-10 rounded-xl text-sm font-extrabold transition-all border ${heaterOn ? 'bg-[#00e5ff]/20 text-[#00e5ff] border-[#00e5ff]/50 shadow-[0_0_20px_rgba(0,229,255,0.4)]' : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10 hover:text-slate-200'}`}
+                 >
+                   {heaterOn ? 'ON' : 'OFF'}
+                 </button>
+                 <input 
+                   type="range" 
+                   min="0" max="100" 
+                   value={heaterIntensity}
+                   onChange={e => setHeaterIntensity(Number(e.target.value))}
+                   className="w-full accent-[#00e5ff] cursor-pointer"
+                 />
+               </div>
             </div>
-            <div className="absolute -bottom-8 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-center whitespace-nowrap">
-              Deploy Token
-            </div>
-          </div>
 
+            {/* Bottom Center Actions */}
+            <div className="flex flex-wrap justify-center items-center gap-3 md:gap-4 pointer-events-auto">
+               <button 
+                 onClick={handleAddWater}
+                 className="px-4 md:px-6 py-2.5 md:py-3.5 bg-white/5 hover:bg-white/10 backdrop-blur-xl text-white text-sm md:text-base font-bold rounded-2xl shadow-xl border border-white/10 transition-all flex items-center gap-2 whitespace-nowrap"
+               >
+                 + Inject Plasma
+               </button>
+               <button 
+                 onClick={handleReset}
+                 className="px-4 md:px-6 py-2.5 md:py-3.5 bg-rose-500/10 hover:bg-rose-500/20 backdrop-blur-xl text-rose-400 text-sm md:text-base font-bold rounded-2xl shadow-xl border border-rose-500/20 transition-all flex items-center gap-2 whitespace-nowrap"
+               >
+                 🔄 Reset
+               </button>
+               <div className="relative">
+                 <button 
+                   onClick={() => setShowElementMenu(!showElementMenu)}
+                   className="px-4 md:px-6 py-2.5 md:py-3.5 bg-white/5 hover:bg-white/10 backdrop-blur-xl text-white text-sm md:text-base font-bold rounded-2xl shadow-xl border border-white/10 transition-all flex items-center gap-2 whitespace-nowrap"
+                 >
+                   ⚛️ Element
+                 </button>
+                 
+                 <AnimatePresence>
+                   {showElementMenu && (
+                     <motion.div 
+                       initial={{ opacity: 0, y: 10 }}
+                       animate={{ opacity: 1, y: 0 }}
+                       exit={{ opacity: 0, y: 10 }}
+                       className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-[200px] bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 p-2 flex flex-col gap-1 pointer-events-auto"
+                     >
+                       {ELEMENTS.map(el => (
+                         <button 
+                           key={el.id}
+                           onClick={() => { setActiveElement(el); setShowElementMenu(false); }}
+                           className={`p-3 rounded-xl font-bold text-sm text-left border border-transparent transition-all whitespace-normal leading-tight
+                             ${activeElement.id === el.id 
+                                ? `bg-slate-800 border-${el.color}` 
+                                : 'hover:bg-white/10 text-slate-300'
+                             }`}
+                           style={{ borderColor: activeElement.id === el.id ? el.color : 'transparent', color: activeElement.id === el.id ? el.color : '' }}
+                         >
+                           {el.name} ({el.id})
+                         </button>
+                       ))}
+                     </motion.div>
+                   )}
+                 </AnimatePresence>
+               </div>
+            </div>
+
+            {/* Bottom Right Element Stand */}
+            <div className="flex flex-col items-center pointer-events-auto shrink-0 mb-4 md:mb-8 md:mr-8 hidden sm:flex">
+              <motion.button 
+                whileHover={{ y: -5 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={handleDropElement}
+                className="w-16 h-16 bg-slate-800 rounded-lg shadow-[0_10px_20px_rgba(0,0,0,0.5)] flex items-center justify-center border border-slate-600 cursor-pointer relative z-10 overflow-hidden"
+                style={{ borderBottomWidth: '4px' }}
+              >
+                {activeElement.type === 'exotic' && (
+                  <div className="absolute inset-0 animate-pulse blur-md opacity-40" style={{ backgroundColor: activeElement.color }} />
+                )}
+                <span className="text-xl font-bold relative z-10 font-mono" style={{ color: activeElement.color }}>{activeElement.id}</span>
+              </motion.button>
+              
+              <div className="w-20 h-4 bg-slate-700 rounded-sm mt-1 border-t border-slate-600" />
+              <div className="flex gap-10">
+                <div className="w-3 h-8 bg-slate-800 rounded-b-sm border-l border-r border-slate-700" />
+                <div className="w-3 h-8 bg-slate-800 rounded-b-sm border-l border-r border-slate-700" />
+              </div>
+              <div className="absolute -bottom-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-center whitespace-nowrap">
+                Deploy
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </div>

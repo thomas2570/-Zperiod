@@ -81,20 +81,20 @@ export default function ExperimentsTab() {
               </motion.span>
             </div>
             
-            <div className="p-8 flex flex-col flex-1">
+            <div className="p-6 md:p-8 flex flex-col flex-1">
               <div className="flex justify-between items-center mb-5">
-                <span className="px-4 py-1.5 bg-white/10 rounded-full text-xs font-bold text-slate-200 tracking-wide uppercase">
+                <span className="px-4 py-1.5 bg-white/10 rounded-full text-xs font-bold text-slate-200 tracking-wide uppercase break-words">
                   {exp.category}
                 </span>
-                <span className="text-slate-400 text-sm font-semibold flex items-center gap-1">
+                <span className="text-slate-400 text-sm font-semibold flex items-center gap-1 shrink-0 ml-2">
                   ⏱️ {exp.time}
                 </span>
               </div>
               
-              <h3 className="text-2xl font-bold text-white mb-3 font-['Space_Grotesk'] group-hover:text-[#00e5ff] transition-colors">{exp.title}</h3>
-              <p className="text-slate-400 text-sm leading-relaxed mb-8 flex-1">{exp.desc}</p>
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-3 font-['Space_Grotesk'] group-hover:text-[#00e5ff] transition-colors break-words leading-tight">{exp.title}</h3>
+              <p className="text-slate-400 text-sm leading-relaxed mb-6 md:mb-8 flex-1 whitespace-normal break-words">{exp.desc}</p>
               
-              <div className="flex justify-between items-center border-t border-slate-700/50 pt-6 mt-auto">
+              <div className="flex justify-between items-center border-t border-slate-700/50 pt-6 mt-auto flex-wrap gap-4">
                 <span className={`text-sm font-extrabold uppercase tracking-widest ${exp.difficulty === 'Beginner' ? 'text-emerald-400' : exp.difficulty === 'Intermediate' ? 'text-amber-400' : 'text-rose-400'}`}>
                   {exp.difficulty}
                 </span>
