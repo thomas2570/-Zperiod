@@ -67,8 +67,8 @@ export default function FlameTestExperiment({ onBack }) {
           ← Back
         </button>
         <div>
-          <h2 className="text-3xl font-extrabold font-['Space_Grotesk'] text-white">Flame Test Analysis</h2>
-          <p className="text-slate-400">Identify metal ions by the color they emit when heated.</p>
+          <h2 className="text-3xl font-extrabold font-['Space_Grotesk'] text-[var(--text-primary)]">Flame Test Analysis</h2>
+          <p className="text-[var(--text-secondary)]">Identify metal ions by the color they emit when heated.</p>
         </div>
       </div>
 
@@ -79,14 +79,14 @@ export default function FlameTestExperiment({ onBack }) {
         ))}
       </div>
 
-      <div className="flex-1 bg-slate-900/50 border border-slate-800 rounded-3xl p-8 relative overflow-hidden backdrop-blur-xl">
+      <div className="flex-1 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-3xl p-8 relative overflow-hidden backdrop-blur-xl">
         <AnimatePresence mode="wait">
           
           {/* STEP 1: Introduction */}
           {step === 1 && (
             <motion.div key="intro" initial={{opacity:0, x:20}} animate={{opacity:1, x:0}} exit={{opacity:0, x:-20}} className="max-w-3xl mx-auto py-10">
-              <h3 className="text-2xl font-bold text-white mb-4">Introduction</h3>
-              <p className="text-slate-300 text-lg leading-relaxed mb-6">
+              <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-4">Introduction</h3>
+              <p className="text-[var(--text-secondary)] text-lg leading-relaxed mb-6">
                 When metal ions are heated in a flame, their electrons absorb energy and jump to higher energy levels. 
                 As they fall back down to their ground state, they release that energy as visible light. 
                 Because each element has a unique electron configuration, they emit unique colors!
@@ -105,7 +105,7 @@ export default function FlameTestExperiment({ onBack }) {
           {step === 2 && (
             <motion.div key="sim" initial={{opacity:0, x:20}} animate={{opacity:1, x:0}} exit={{opacity:0, x:-20}} className="flex flex-col h-full">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold text-white">Simulation Area</h3>
+                <h3 className="text-xl font-bold text-[var(--text-primary)]">Simulation Area</h3>
                 <button onClick={() => setStep(3)} className="px-6 py-2 bg-[#7c3aed] text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(124,58,237,0.4)] transition-all">
                   Proceed to Quiz →
                 </button>
@@ -120,19 +120,19 @@ export default function FlameTestExperiment({ onBack }) {
                       key={salt.id}
                       onClick={() => handleHeat(salt)}
                       disabled={isHeating}
-                      className="w-full flex items-center justify-between p-4 bg-slate-800 border border-slate-700 rounded-xl hover:border-slate-500 disabled:opacity-50 transition-all text-left"
+                      className="w-full flex items-center justify-between p-4 bg-[var(--bg-primary)] border border-[var(--border)] rounded-xl hover:border-sky-400 disabled:opacity-50 transition-all text-left"
                     >
                       <div>
-                        <div className="font-bold text-white">{salt.name}</div>
-                        <div className="text-xs text-slate-400">{salt.symbol}</div>
+                        <div className="font-bold text-[var(--text-primary)]">{salt.name}</div>
+                        <div className="text-xs text-[var(--text-secondary)]">{salt.symbol}</div>
                       </div>
-                      <div className="w-8 h-8 rounded-full border border-white/20 bg-white/5 flex items-center justify-center">🔥</div>
+                      <div className="w-8 h-8 rounded-full border border-[var(--border)] bg-[var(--bg-card)] flex items-center justify-center">🔥</div>
                     </button>
                   ))}
                 </div>
 
                 {/* Burner Visualizer */}
-                <div className="lg:col-span-2 bg-[#0a0d14] rounded-2xl border-2 border-slate-800 flex flex-col items-center justify-end pb-12 relative overflow-hidden">
+                <div className="lg:col-span-2 bg-[var(--bg-primary)] rounded-2xl border-2 border-[var(--border)] flex flex-col items-center justify-end pb-12 relative overflow-hidden">
                    {/* Background ambient glow based on flame */}
                    <div 
                      className="absolute inset-0 transition-colors duration-500 opacity-20"
@@ -195,7 +195,7 @@ export default function FlameTestExperiment({ onBack }) {
             <motion.div key="quiz" initial={{opacity:0, x:20}} animate={{opacity:1, x:0}} exit={{opacity:0, x:-20}} className="max-w-2xl mx-auto py-10">
               {!showResults ? (
                 <>
-                  <h3 className="text-2xl font-bold text-white mb-8">Observation Quiz</h3>
+                  <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-8">Observation Quiz</h3>
                   
                   <div className="space-y-8 mb-8">
                     <div>
@@ -205,7 +205,7 @@ export default function FlameTestExperiment({ onBack }) {
                           <button 
                             key={`q1-${opt}`}
                             onClick={() => setAnswers({...answers, q1: opt.toLowerCase()})}
-                            className={`px-4 py-2 rounded-lg border ${answers.q1 === opt.toLowerCase() ? 'bg-sky-500/20 border-sky-500 text-sky-400' : 'border-slate-700 text-slate-400'}`}
+                            className={`px-4 py-2 rounded-lg border ${answers.q1 === opt.toLowerCase() ? 'bg-sky-500/20 border-sky-500 text-sky-500' : 'border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-sky-300'}`}
                           >{opt}</button>
                         ))}
                       </div>
@@ -218,7 +218,7 @@ export default function FlameTestExperiment({ onBack }) {
                           <button 
                             key={`q2-${opt}`}
                             onClick={() => setAnswers({...answers, q2: opt === 'Green' ? 'cu' : opt.toLowerCase()})}
-                            className={`px-4 py-2 rounded-lg border ${answers.q2 === (opt === 'Green' ? 'cu' : opt.toLowerCase()) ? 'bg-sky-500/20 border-sky-500 text-sky-400' : 'border-slate-700 text-slate-400'}`}
+                            className={`px-4 py-2 rounded-lg border ${answers.q2 === (opt === 'Green' ? 'cu' : opt.toLowerCase()) ? 'bg-sky-500/20 border-sky-500 text-sky-500' : 'border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-sky-300'}`}
                           >{opt}</button>
                         ))}
                       </div>
@@ -231,7 +231,7 @@ export default function FlameTestExperiment({ onBack }) {
                           <button 
                             key={`q3-${opt}`}
                             onClick={() => setAnswers({...answers, q3: opt.toLowerCase()})}
-                            className={`text-left px-4 py-2 rounded-lg border ${answers.q3 === opt.toLowerCase() ? 'bg-sky-500/20 border-sky-500 text-sky-400' : 'border-slate-700 text-slate-400'}`}
+                            className={`text-left px-4 py-2 rounded-lg border ${answers.q3 === opt.toLowerCase() ? 'bg-sky-500/20 border-sky-500 text-sky-500' : 'border-[var(--border)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-sky-300'}`}
                           >{opt}</button>
                         ))}
                       </div>
@@ -245,11 +245,11 @@ export default function FlameTestExperiment({ onBack }) {
               ) : (
                 <div className="text-center">
                   <div className="text-6xl mb-4">{score === 3 ? '🏆' : '👍'}</div>
-                  <h3 className="text-3xl font-bold text-white mb-2">Quiz Complete!</h3>
-                  <p className="text-xl text-slate-400 mb-8">You scored {score} out of 3.</p>
+                  <h3 className="text-3xl font-bold text-[var(--text-primary)] mb-2">Quiz Complete!</h3>
+                  <p className="text-xl text-[var(--text-secondary)] mb-8">You scored {score} out of 3.</p>
                   
                   <div className="flex justify-center gap-4">
-                    <button onClick={generatePDF} className="px-6 py-3 bg-slate-800 border border-slate-700 text-white font-bold rounded-xl flex items-center gap-2 hover:bg-slate-700">
+                    <button onClick={generatePDF} className="px-6 py-3 bg-[var(--bg-card)] border border-[var(--border)] text-[var(--text-primary)] font-bold rounded-xl flex items-center gap-2 hover:bg-[var(--border)]">
                       📄 Download PDF Lab Report
                     </button>
                     <button onClick={onBack} className="px-6 py-3 bg-sky-500 text-slate-900 font-bold rounded-xl">

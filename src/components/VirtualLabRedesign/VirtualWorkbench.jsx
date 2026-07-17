@@ -289,13 +289,13 @@ export default function VirtualWorkbench() {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center p-4 md:p-8 bg-[#0a0d14]">
-      <div className="w-full max-w-[1400px] h-[85vh] bg-[#0f172a] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] flex flex-col relative overflow-hidden border border-slate-800">
+    <div className="w-full h-full flex items-center justify-center p-4 md:p-8 bg-[var(--bg-primary)]">
+      <div className="w-full max-w-[1400px] h-[85vh] bg-[var(--bg-secondary)] rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.5)] flex flex-col relative overflow-hidden border border-[var(--border)]">
         
         {/* Top Bar */}
-        <div className="flex items-start md:items-center justify-between px-6 py-4 border-b border-slate-800 bg-black/20 gap-4">
-          <h2 className="text-lg md:text-xl font-bold text-white font-['Space_Grotesk'] tracking-wide leading-tight break-words">Antigravity & Exotic Field Theory</h2>
-          <button className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center text-slate-300 transition-colors flex-shrink-0 mt-1 md:mt-0">
+        <div className="flex items-start md:items-center justify-between px-6 py-4 border-b border-[var(--border)] bg-[var(--bg-primary)] gap-4">
+          <h2 className="text-lg md:text-xl font-bold text-[var(--text-primary)] font-['Space_Grotesk'] tracking-wide leading-tight break-words">Antigravity & Exotic Field Theory</h2>
+          <button className="w-8 h-8 rounded-full bg-[var(--bg-card)] hover:bg-[var(--border)] flex items-center justify-center text-[var(--text-secondary)] transition-colors flex-shrink-0 mt-1 md:mt-0">
             ✕
           </button>
         </div>
@@ -310,10 +310,10 @@ export default function VirtualWorkbench() {
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 20, opacity: 1 }}
                 exit={{ y: -50, opacity: 0 }}
-                className={`absolute top-4 left-1/2 -translate-x-1/2 z-20 px-6 md:px-10 py-3 md:py-4 rounded-2xl border shadow-2xl font-mono text-sm md:text-xl font-extrabold backdrop-blur-xl transition-all duration-500 max-w-[90%] text-center break-words
+                className={`absolute top-0 left-1/2 -translate-x-1/2 bg-[var(--bg-card)] border border-[var(--border)] px-8 py-4 rounded-2xl shadow-[0_10px_40px_rgba(0,229,255,0.2)] backdrop-blur-xl z-20 md:text-xl font-extrabold transition-all duration-500 max-w-[90%] text-center break-words
                   ${activeElement.type === 'exotic' 
-                     ? 'bg-[#0a0d14]/70 text-[#00e5ff] border-[#00e5ff]/60 shadow-[0_0_50px_rgba(0,229,255,0.4)]' 
-                     : 'bg-slate-900/80 text-white border-slate-600 shadow-[0_0_30px_rgba(255,255,255,0.1)]'
+                     ? 'text-[#00e5ff] border-[#00e5ff]/60' 
+                     : 'text-[var(--text-primary)] border-[var(--border)]'
                   }
                 `}
               >
@@ -323,8 +323,8 @@ export default function VirtualWorkbench() {
           </AnimatePresence>
 
           {/* Canvas Background Area */}
-          <div className="absolute inset-0 bg-[#0a0d14]">
-             <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px)`, backgroundSize: '40px 40px' }}></div>
+          <div className="absolute inset-0 bg-[var(--bg-primary)]">
+             <div className="absolute inset-0 pointer-events-none opacity-20" style={{ backgroundImage: `linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)`, backgroundSize: '40px 40px' }}></div>
             <canvas 
               ref={canvasRef}
               width={1000}
@@ -334,8 +334,8 @@ export default function VirtualWorkbench() {
           </div>
 
           {/* Left Vertical Slider (Temperature) */}
-          <div className="hidden lg:flex absolute left-8 top-1/2 -translate-y-1/2 bg-slate-900/60 backdrop-blur-xl rounded-full py-8 px-4 shadow-2xl border border-white/10 flex-col items-center gap-4 z-10">
-            <div className="relative h-48 w-4 bg-slate-950 rounded-full flex flex-col justify-end overflow-hidden border border-white/5">
+          <div className="absolute top-4 left-4 bg-[var(--bg-card)] border border-[var(--border)] backdrop-blur-md rounded-2xl p-4 w-12 flex flex-col items-center gap-4 z-20 shadow-lg">
+            <div className="h-48 w-4 bg-[var(--bg-primary)] rounded-full border border-[var(--border)] relative overflow-hidden flex flex-col justify-end shadow-inner">
                <motion.div 
                  className="w-full bg-[#00e5ff] rounded-full"
                  animate={{ height: `${((temperature - 20) / 80) * 100}%` }}
@@ -343,14 +343,14 @@ export default function VirtualWorkbench() {
                  style={{ boxShadow: '0 0 15px #00e5ff' }}
                />
                <motion.div 
-                 className="absolute w-6 h-6 bg-slate-900 border-2 border-[#00e5ff] rounded-full shadow-[0_0_20px_#00e5ff] -left-1"
+                 className="absolute w-6 h-6 bg-[var(--bg-primary)] border-2 border-[#00e5ff] rounded-full shadow-[0_0_20px_#00e5ff] -left-1"
                  animate={{ bottom: `calc(${((temperature - 20) / 80) * 100}% - 12px)` }}
                  transition={{ duration: 0.2 }}
                />
             </div>
             <div className="text-center mt-2">
-              <div className="text-sm font-bold text-white font-mono">{Math.round(temperature)}°</div>
-              <div className="text-[10px] font-bold text-slate-400 tracking-widest mt-1">TEMP</div>
+              <div className="text-[var(--text-secondary)] text-xs uppercase tracking-widest font-bold mb-1">TEMP</div>
+              <div className="text-sm font-bold text-[var(--text-primary)] font-mono">{Math.round(temperature)}°</div>
             </div>
           </div>
 
@@ -358,43 +358,21 @@ export default function VirtualWorkbench() {
           <div className="absolute bottom-0 left-0 w-full p-4 md:p-8 flex flex-col md:flex-row justify-between items-center md:items-end gap-6 z-10 pointer-events-none">
             
             {/* Bottom Left Heater Control */}
-            <div className="bg-slate-900/60 backdrop-blur-xl rounded-2xl p-5 shadow-2xl border border-white/10 w-[200px] pointer-events-auto shrink-0 hidden md:block">
-               <div className="text-[10px] font-bold text-slate-400 mb-4 text-center tracking-widest uppercase">Thermal Control</div>
-               <div className="flex items-center gap-4">
-                 <button 
-                   onClick={() => setHeaterOn(!heaterOn)}
-                   className={`flex items-center justify-center w-14 h-10 rounded-xl text-sm font-extrabold transition-all border ${heaterOn ? 'bg-[#00e5ff]/20 text-[#00e5ff] border-[#00e5ff]/50 shadow-[0_0_20px_rgba(0,229,255,0.4)]' : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10 hover:text-slate-200'}`}
-                 >
-                   {heaterOn ? 'ON' : 'OFF'}
-                 </button>
-                 <input 
-                   type="range" 
-                   min="0" max="100" 
-                   value={heaterIntensity}
-                   onChange={e => setHeaterIntensity(Number(e.target.value))}
-                   className="w-full accent-[#00e5ff] cursor-pointer"
-                 />
-               </div>
+            <div className="flex flex-col gap-2 pointer-events-auto shrink-0 w-full md:w-auto">
+               <button onClick={() => setWaterLevel(prev => Math.min(prev + 10, 100))} className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] font-bold transition-all w-full justify-center">
+                  <span className="text-xl text-[#00e5ff]">+</span> Inject Fluid
+                </button>
+                <button onClick={handleReset} className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] font-bold transition-all w-full justify-center">
+                  <span className="text-xl">🔄</span> Reset
+                </button>
             </div>
 
             {/* Bottom Center Actions */}
             <div className="flex flex-wrap justify-center items-center gap-3 md:gap-4 pointer-events-auto">
-               <button 
-                 onClick={handleAddWater}
-                 className="px-4 md:px-6 py-2.5 md:py-3.5 bg-white/5 hover:bg-white/10 backdrop-blur-xl text-white text-sm md:text-base font-bold rounded-2xl shadow-xl border border-white/10 transition-all flex items-center gap-2 whitespace-nowrap"
-               >
-                 + Inject Plasma
-               </button>
-               <button 
-                 onClick={handleReset}
-                 className="px-4 md:px-6 py-2.5 md:py-3.5 bg-rose-500/10 hover:bg-rose-500/20 backdrop-blur-xl text-rose-400 text-sm md:text-base font-bold rounded-2xl shadow-xl border border-rose-500/20 transition-all flex items-center gap-2 whitespace-nowrap"
-               >
-                 🔄 Reset
-               </button>
                <div className="relative">
                  <button 
                    onClick={() => setShowElementMenu(!showElementMenu)}
-                   className="px-4 md:px-6 py-2.5 md:py-3.5 bg-white/5 hover:bg-white/10 backdrop-blur-xl text-white text-sm md:text-base font-bold rounded-2xl shadow-xl border border-white/10 transition-all flex items-center gap-2 whitespace-nowrap"
+                   className="px-4 md:px-6 py-2.5 md:py-3.5 bg-[var(--bg-card)] hover:bg-[var(--border)] backdrop-blur-xl text-[var(--text-primary)] text-sm md:text-base font-bold rounded-2xl shadow-xl border border-[var(--border)] transition-all flex items-center gap-2 whitespace-nowrap"
                  >
                    ⚛️ Element
                  </button>
@@ -405,16 +383,16 @@ export default function VirtualWorkbench() {
                        initial={{ opacity: 0, y: 10 }}
                        animate={{ opacity: 1, y: 0 }}
                        exit={{ opacity: 0, y: 10 }}
-                       className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 w-[200px] bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 p-2 flex flex-col gap-1 pointer-events-auto"
+                       className="absolute bottom-[calc(100%+10px)] left-0 w-[200px] bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl p-2 flex flex-col gap-1 shadow-[0_20px_40px_rgba(0,0,0,0.5)] z-50 backdrop-blur-2xl"
                      >
                        {ELEMENTS.map(el => (
                          <button 
                            key={el.id}
                            onClick={() => { setActiveElement(el); setShowElementMenu(false); }}
-                           className={`p-3 rounded-xl font-bold text-sm text-left border border-transparent transition-all whitespace-normal leading-tight
+                           className={`p-3 rounded-xl font-bold text-sm text-left border transition-all whitespace-normal leading-tight
                              ${activeElement.id === el.id 
-                                ? `bg-slate-800 border-${el.color}` 
-                                : 'hover:bg-white/10 text-slate-300'
+                                ? `bg-[var(--bg-primary)] border-${el.color}` 
+                                : 'border-transparent hover:bg-[var(--bg-primary)] text-[var(--text-secondary)]'
                              }`}
                            style={{ borderColor: activeElement.id === el.id ? el.color : 'transparent', color: activeElement.id === el.id ? el.color : '' }}
                          >
@@ -433,7 +411,7 @@ export default function VirtualWorkbench() {
                 whileHover={{ y: -5 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={handleDropElement}
-                className="w-16 h-16 bg-slate-800 rounded-lg shadow-[0_10px_20px_rgba(0,0,0,0.5)] flex items-center justify-center border border-slate-600 cursor-pointer relative z-10 overflow-hidden"
+                className="w-16 h-16 bg-[var(--bg-card)] rounded-lg shadow-[0_10px_20px_rgba(0,0,0,0.5)] flex items-center justify-center border border-[var(--border)] cursor-pointer relative z-10 overflow-hidden"
                 style={{ borderBottomWidth: '4px' }}
               >
                 {activeElement.type === 'exotic' && (
@@ -442,12 +420,12 @@ export default function VirtualWorkbench() {
                 <span className="text-xl font-bold relative z-10 font-mono" style={{ color: activeElement.color }}>{activeElement.id}</span>
               </motion.button>
               
-              <div className="w-20 h-4 bg-slate-700 rounded-sm mt-1 border-t border-slate-600" />
+              <div className="w-20 h-4 bg-[var(--border)] rounded-sm mt-1 border-t border-[var(--border)]" />
               <div className="flex gap-10">
-                <div className="w-3 h-8 bg-slate-800 rounded-b-sm border-l border-r border-slate-700" />
-                <div className="w-3 h-8 bg-slate-800 rounded-b-sm border-l border-r border-slate-700" />
+                <div className="w-3 h-8 bg-[var(--bg-card)] rounded-b-sm border-l border-r border-[var(--border)]" />
+                <div className="w-3 h-8 bg-[var(--bg-card)] rounded-b-sm border-l border-r border-[var(--border)]" />
               </div>
-              <div className="absolute -bottom-6 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-center whitespace-nowrap">
+              <div className="absolute -bottom-6 text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-widest text-center whitespace-nowrap">
                 Deploy
               </div>
             </div>

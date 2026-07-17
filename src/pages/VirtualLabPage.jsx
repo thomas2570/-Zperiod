@@ -25,7 +25,7 @@ export default function VirtualLabPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#0a0d14] text-slate-800 dark:text-slate-200 font-sans relative overflow-hidden transition-colors duration-300">
+    <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] relative overflow-hidden transition-colors duration-300">
       {/* Background Grid - We use a pseudo-element for cleaner light/dark switching of background-image */}
       <div 
         className="absolute inset-0 pointer-events-none opacity-100 dark:opacity-100" 
