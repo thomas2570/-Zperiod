@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import TopTabBar from '../components/VirtualLabRedesign/TopTabBar';
-import PlaceholderTab from '../components/VirtualLabRedesign/PlaceholderTab';
 import ExperimentsTab from '../components/VirtualLabRedesign/ExperimentsTab/ExperimentsTab';
 import MixturesTab from '../components/VirtualLabRedesign/MixturesTab/MixturesTab';
-import ThermalShockSimulator from '../components/VirtualLabRedesign/ThermalShockSimulator';
+import VirtualWorkbench from '../components/VirtualLabRedesign/VirtualWorkbench';
 
 export default function VirtualLabPage() {
   const [activeTab, setActiveTab] = useState('lab');
@@ -15,13 +14,13 @@ export default function VirtualLabPage() {
   const renderTabContent = () => {
     switch (activeTab) {
       case 'lab':
-        return <ThermalShockSimulator />;
+        return <VirtualWorkbench />;
       case 'experiments':
         return <ExperimentsTab />;
       case 'mixtures':
         return <MixturesTab />;
       default:
-        return <ThermalShockSimulator />;
+        return <VirtualWorkbench />;
     }
   };
 
