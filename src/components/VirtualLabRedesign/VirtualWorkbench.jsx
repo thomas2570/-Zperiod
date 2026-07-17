@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Atom, RotateCcw, Droplets, FlaskConical, Target, Thermometer } from 'lucide-react';
 
 const ELEMENTS = [
-  { id: 'Na', name: 'Sodium', type: 'standard', equation: '2Na + 2H₂O → 2NaOH + H₂↑', color: '#facc15' },
-  { id: 'Li', name: 'Lithium', type: 'standard', equation: '2Li + 2H₂O → 2LiOH + H₂↑', color: '#f87171' },
-  { id: 'NMC', name: 'Negative Mass Carbon', type: 'exotic', equation: 'Δg = -G * (-m / r²) | Field Stabilized', color: '#00e5ff' },
-  { id: 'GrC', name: 'Graviton Catalyst', type: 'exotic', equation: '∇ × A = B | Spatiotemporal Warp Active', color: '#7c3aed' }
+  { id: 'Na', name: 'Sodium Metal', type: 'metal', equation: '2Na + 2H₂O → 2NaOH + H₂↑', color: '#facc15' },
+  { id: 'Li', name: 'Lithium Metal', type: 'metal', equation: '2Li + 2H₂O → 2LiOH + H₂↑', color: '#f87171' },
+  { id: 'HCl', name: 'Hydrochloric Acid', type: 'acid', equation: 'HCl + H₂O → H₃O⁺ + Cl⁻', color: '#38bdf8' },
+  { id: 'CuSO₄', name: 'Copper Sulfate', type: 'salt', equation: 'CuSO₄(s) ⇌ Cu²⁺(aq) + SO₄²⁻(aq)', color: '#10b981' }
 ];
 
 export default function VirtualWorkbench() {
@@ -95,12 +96,19 @@ export default function VirtualWorkbench() {
       const beakerLeft = cx - beakerW / 2;
       const beakerTop = cy - beakerH / 2;
 
+      // Dark mode check for dynamic canvas colors
+      const isDark = document.documentElement.classList.contains('dark') || document.documentElement.classList.contains('dark-theme');
+      const strokeColor = isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)';
+      const textColor = isDark ? '#ffffff' : '#1e293b';
+      const burnerBase = isDark ? '#1e293b' : '#94a3b8';
+      const burnerTopC = isDark ? '#0f172a' : '#64748b';
+
       // Draw Burner underneath (moved lower to prevent overlap)
       const burnerTop = cy + beakerH / 2 + 20; 
       if (state.heaterOn) {
-        ctx.fillStyle = '#1e293b';
+        ctx.fillStyle = burnerBase;
         ctx.fillRect(cx - 15, burnerTop, 30, 40);
-        ctx.fillStyle = '#0f172a';
+        ctx.fillStyle = burnerTopC;
         ctx.fillRect(cx - 25, burnerTop + 35, 50, 10);
         
         const flameH = (state.heaterIntensity / 100) * 35; // Max 35px so it doesn't overlap beaker
@@ -111,14 +119,14 @@ export default function VirtualWorkbench() {
         ctx.fill();
       }
 
-      const isExotic = state.activeElement.type === 'exotic';
-      const isAntiGrav = state.reactionActive && isExotic;
+      const isAcid = state.activeElement.type === 'acid';
+      const isVigorous = state.reactionActive && (state.activeElement.id === 'Na' || state.activeElement.id === 'Li');
 
       // Draw Fluid
       if (state.waterLevel > 0) {
         let waterHeight = (state.waterLevel / 100) * (beakerH - 20);
         
-        if (isAntiGrav) {
+        if (isVigorous) {
            state.waterLevel = Math.max(0, state.waterLevel - 0.2); 
            waterHeight = (state.waterLevel / 100) * (beakerH - 20);
         }
@@ -142,12 +150,12 @@ export default function VirtualWorkbench() {
           ctx.lineTo(beakerLeft + 10, cy + beakerH / 2);
           ctx.quadraticCurveTo(beakerLeft + 5, cy + beakerH / 2 - 5, beakerLeft + 5, cy + beakerH / 2 - 10);
           
-          ctx.fillStyle = isAntiGrav ? 'rgba(0, 229, 255, 0.4)' : 'rgba(59, 130, 246, 0.6)';
+          ctx.fillStyle = isAcid ? 'rgba(56, 189, 248, 0.5)' : state.activeElement.id === 'CuSO₄' && state.reactionActive ? 'rgba(16, 185, 129, 0.5)' : 'rgba(59, 130, 246, 0.6)';
           ctx.fill();
         }
 
         // Standard Reaction / Heating Bubbles (Stay in container)
-        if (!isAntiGrav && (state.temperature > 40 || state.reactionActive)) {
+        if (!isVigorous && (state.temperature > 40 || state.reactionActive)) {
           if (Math.random() < 0.3) {
             state.bubbles.push({
               x: beakerLeft + 10 + Math.random() * (beakerW - 20),
@@ -158,17 +166,17 @@ export default function VirtualWorkbench() {
           }
         }
         
-        // Anti-Gravity Particles
-        if (isAntiGrav) {
+        // Vigorous Reaction Particles
+        if (isVigorous) {
            if (Math.random() < 0.8) {
              state.antiGravParticles.push({
                x: beakerLeft + Math.random() * beakerW,
                y: waterY + Math.random() * waterHeight,
-               vx: (Math.random() - 0.5) * 2,
-               vy: -Math.random() * 4 - 2,
+               vx: (Math.random() - 0.5) * 4,
+               vy: -Math.random() * 6 - 2,
                life: 1.0,
-               color: Math.random() > 0.5 ? '#00e5ff' : state.activeElement.color,
-               size: Math.random() * 6 + 2
+               color: state.activeElement.color,
+               size: Math.random() * 4 + 2
              });
            }
         }
@@ -187,7 +195,7 @@ export default function VirtualWorkbench() {
           if (b.y < waterY) state.bubbles.splice(i, 1);
         }
         
-        // Draw Anti-Gravity Particles
+        // Draw Vigorous Particles
         for (let i = state.antiGravParticles.length - 1; i >= 0; i--) {
           const p = state.antiGravParticles[i];
           p.x += p.vx;
@@ -215,7 +223,7 @@ export default function VirtualWorkbench() {
       }
 
       // Draw Beaker Glass Container
-      ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+      ctx.strokeStyle = strokeColor;
       ctx.lineWidth = 4;
       ctx.beginPath();
       ctx.moveTo(beakerLeft, beakerTop);
@@ -243,8 +251,10 @@ export default function VirtualWorkbench() {
         if (state.elementY > limitY) state.elementY = limitY;
         
         let alpha = 1;
-        if (isAntiGrav) {
-           alpha = Math.max(0, state.waterLevel / 50); // Fades away as fluid depletes
+        if (isVigorous) {
+           alpha = Math.max(0, state.waterLevel / 50); // Fades away as metal reacts
+        } else if (state.activeElement.type === 'acid' || state.activeElement.type === 'salt') {
+           alpha = state.reactionActive ? Math.max(0, 1 - (Date.now() % 1000) / 1000) : 1;
         }
 
         if (alpha > 0.01) {
@@ -252,7 +262,7 @@ export default function VirtualWorkbench() {
           ctx.fillStyle = state.activeElement.color;
           ctx.fillRect(cx - 20, state.elementY, 40, 40);
           
-          ctx.fillStyle = '#0a0d14';
+          ctx.fillStyle = textColor;
           ctx.font = 'bold 16px Space Grotesk, sans-serif';
           ctx.textAlign = 'center';
           ctx.fillText(state.activeElement.id, cx, state.elementY + 26);
@@ -294,7 +304,10 @@ export default function VirtualWorkbench() {
         
         {/* Top Bar */}
         <div className="flex items-start md:items-center justify-between px-6 py-4 border-b border-[var(--border)] bg-[var(--bg-primary)] gap-4">
-          <h2 className="text-lg md:text-xl font-bold text-[var(--text-primary)] font-['Space_Grotesk'] tracking-wide leading-tight break-words">Antigravity & Exotic Field Theory</h2>
+          <div className="flex items-center gap-3">
+            <FlaskConical className="text-sky-500" size={20} />
+            <h2 className="text-lg md:text-xl font-bold text-[var(--text-primary)] font-['Space_Grotesk'] tracking-wide leading-tight">Chemistry Virtual Lab</h2>
+          </div>
           <button className="w-8 h-8 rounded-full bg-[var(--bg-card)] hover:bg-[var(--border)] flex items-center justify-center text-[var(--text-secondary)] transition-colors flex-shrink-0 mt-1 md:mt-0">
             ✕
           </button>
@@ -311,8 +324,8 @@ export default function VirtualWorkbench() {
                 animate={{ y: 20, opacity: 1 }}
                 exit={{ y: -50, opacity: 0 }}
                 className={`absolute top-0 left-1/2 -translate-x-1/2 bg-[var(--bg-card)] border border-[var(--border)] px-8 py-4 rounded-2xl shadow-[0_10px_40px_rgba(0,229,255,0.2)] backdrop-blur-xl z-20 md:text-xl font-extrabold transition-all duration-500 max-w-[90%] text-center break-words
-                  ${activeElement.type === 'exotic' 
-                     ? 'text-[#00e5ff] border-[#00e5ff]/60' 
+                  ${activeElement.type === 'metal' 
+                     ? 'text-[#facc15] border-[#facc15]/60' 
                      : 'text-[var(--text-primary)] border-[var(--border)]'
                   }
                 `}
@@ -348,8 +361,9 @@ export default function VirtualWorkbench() {
                  transition={{ duration: 0.2 }}
                />
             </div>
-            <div className="text-center mt-2">
-              <div className="text-[var(--text-secondary)] text-xs uppercase tracking-widest font-bold mb-1">TEMP</div>
+            <div className="text-center mt-3">
+              <Thermometer size={16} className="text-[var(--text-secondary)] mx-auto mb-1 opacity-70" />
+              <div className="text-[var(--text-secondary)] text-[10px] uppercase tracking-widest font-bold mb-1">TEMP</div>
               <div className="text-sm font-bold text-[var(--text-primary)] font-mono">{Math.round(temperature)}°</div>
             </div>
           </div>
@@ -359,11 +373,11 @@ export default function VirtualWorkbench() {
             
             {/* Bottom Left Heater Control */}
             <div className="flex flex-col gap-2 pointer-events-auto shrink-0 w-full md:w-auto">
-               <button onClick={() => setWaterLevel(prev => Math.min(prev + 10, 100))} className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] font-bold transition-all w-full justify-center">
-                  <span className="text-xl text-[#00e5ff]">+</span> Inject Fluid
+               <button onClick={() => setWaterLevel(prev => Math.min(prev + 10, 100))} className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] font-bold transition-all w-full justify-center group shadow-md hover:shadow-lg">
+                  <Droplets size={18} className="text-[#00e5ff] group-hover:scale-110 transition-transform" /> Inject Fluid
                 </button>
-                <button onClick={handleReset} className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[var(--bg-card)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] font-bold transition-all w-full justify-center">
-                  <span className="text-xl">🔄</span> Reset
+                <button onClick={handleReset} className="flex items-center gap-2 px-5 py-3 rounded-xl bg-[var(--bg-card)] hover:bg-rose-500/10 hover:text-rose-500 hover:border-rose-500/30 border border-[var(--border)] text-[var(--text-primary)] font-bold transition-all w-full justify-center shadow-md">
+                  <RotateCcw size={16} /> Reset
                 </button>
             </div>
 
@@ -372,9 +386,12 @@ export default function VirtualWorkbench() {
                <div className="relative">
                  <button 
                    onClick={() => setShowElementMenu(!showElementMenu)}
-                   className="px-4 md:px-6 py-2.5 md:py-3.5 bg-[var(--bg-card)] hover:bg-[var(--border)] backdrop-blur-xl text-[var(--text-primary)] text-sm md:text-base font-bold rounded-2xl shadow-xl border border-[var(--border)] transition-all flex items-center gap-2 whitespace-nowrap"
+                   className="px-4 md:px-6 py-2.5 md:py-3.5 bg-[var(--bg-card)] hover:bg-[var(--border)] backdrop-blur-xl text-[var(--text-primary)] text-sm md:text-base font-bold rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)] border border-[var(--border)] transition-all flex items-center gap-3"
                  >
-                   ⚛️ Element
+                   <div className="p-1 rounded-md bg-purple-500/10 text-purple-500 shrink-0">
+                     <Target size={16} />
+                   </div>
+                   <span>Select Chemical</span>
                  </button>
                  
                  <AnimatePresence>
@@ -414,7 +431,7 @@ export default function VirtualWorkbench() {
                 className="w-16 h-16 bg-[var(--bg-card)] rounded-lg shadow-[0_10px_20px_rgba(0,0,0,0.5)] flex items-center justify-center border border-[var(--border)] cursor-pointer relative z-10 overflow-hidden"
                 style={{ borderBottomWidth: '4px' }}
               >
-                {activeElement.type === 'exotic' && (
+                {activeElement.type === 'metal' && (
                   <div className="absolute inset-0 animate-pulse blur-md opacity-40" style={{ backgroundColor: activeElement.color }} />
                 )}
                 <span className="text-xl font-bold relative z-10 font-mono" style={{ color: activeElement.color }}>{activeElement.id}</span>
@@ -425,8 +442,8 @@ export default function VirtualWorkbench() {
                 <div className="w-3 h-8 bg-[var(--bg-card)] rounded-b-sm border-l border-r border-[var(--border)]" />
                 <div className="w-3 h-8 bg-[var(--bg-card)] rounded-b-sm border-l border-r border-[var(--border)]" />
               </div>
-              <div className="absolute -bottom-6 text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-widest text-center whitespace-nowrap">
-                Deploy
+              <div className="absolute -bottom-6 text-[10px] font-bold text-[var(--text-secondary)] uppercase tracking-widest text-center flex items-center gap-1 opacity-70 w-full justify-center">
+                <FlaskConical size={10} /> Add to Beaker
               </div>
             </div>
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Beaker, Info, ChevronRight, Droplets } from 'lucide-react';
 
 const CATIONS = ['Na⁺', 'K⁺', 'NH₄⁺', 'Ag⁺', 'Ca²⁺', 'Ba²⁺', 'Cu²⁺', 'Pb²⁺', 'Fe³⁺', 'Al³⁺'];
 const ANIONS = ['NO₃⁻', 'Cl⁻', 'SO₄²⁻', 'CO₃²⁻', 'OH⁻', 'S²⁻', 'PO₄³⁻'];
@@ -37,17 +38,22 @@ export default function SolubilityRules() {
   const filteredAnions = filterAnion === 'ALL' ? ANIONS : [filterAnion];
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl backdrop-blur-lg">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+    <div className="bg-[var(--bg-secondary)] border border-[var(--border)] rounded-3xl p-6 md:p-10 shadow-2xl backdrop-blur-lg w-full max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
         <div>
-          <h3 className="text-2xl font-bold text-white font-['Space_Grotesk']">Interactive Solubility Table</h3>
-          <p className="text-slate-400">Click any ion pair to view precipitation details.</p>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-sky-500/10 text-sky-500 rounded-xl">
+              <Beaker size={24} />
+            </div>
+            <h3 className="text-3xl font-bold text-[var(--text-primary)] font-['Space_Grotesk']">Solubility Matrix</h3>
+          </div>
+          <p className="text-[var(--text-secondary)]">Click any ion pair cell to investigate precipitation dynamics.</p>
         </div>
         
         <div className="flex flex-wrap gap-2">
            <button 
              onClick={() => setFilterAnion('ALL')}
-             className={`px-3 py-1 text-sm rounded-lg border ${filterAnion === 'ALL' ? 'bg-white/10 text-white' : 'border-white/10 text-slate-400'}`}
+             className={`px-3 py-1 text-sm rounded-lg border ${filterAnion === 'ALL' ? 'bg-[var(--bg-card)] text-[var(--text-primary)] border-[var(--border)]' : 'border-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-card)]'}`}
            >
              All Anions
            </button>
@@ -55,7 +61,7 @@ export default function SolubilityRules() {
              <button 
                key={a}
                onClick={() => setFilterAnion(a)}
-               className={`px-3 py-1 text-sm rounded-lg border ${filterAnion === a ? 'bg-white/10 text-white' : 'border-white/10 text-slate-400'}`}
+               className={`px-3 py-1 text-sm rounded-lg border ${filterAnion === a ? 'bg-[var(--bg-card)] text-[var(--text-primary)] border-[var(--border)]' : 'border-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-card)]'}`}
              >
                {a}
              </button>
@@ -63,14 +69,19 @@ export default function SolubilityRules() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        <div className="lg:col-span-3 overflow-x-auto no-scrollbar">
-          <table className="w-full min-w-[600px] border-collapse">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-10">
+        <div className="xl:col-span-3 overflow-x-auto no-scrollbar bg-[var(--bg-primary)] rounded-2xl border border-[var(--border)] shadow-inner">
+          <table className="w-full min-w-[700px] border-collapse">
             <thead>
-              <tr>
-                <th className="p-3 text-left border-b-2 border-white/10 text-slate-500 font-bold bg-transparent">Cation \ Anion</th>
+              <tr className="bg-[var(--bg-secondary)]">
+                <th className="p-4 text-left border-b border-[var(--border)] text-[var(--text-secondary)] font-bold uppercase tracking-wider text-sm sticky left-0 z-10 bg-[var(--bg-secondary)]">
+                  <div className="flex items-center justify-between">
+                    <span>Cation</span>
+                    <span className="text-[10px]">Anion <ChevronRight size={14} className="inline" /></span>
+                  </div>
+                </th>
                 {filteredAnions.map(a => (
-                  <th key={a} className="p-3 text-center border-b-2 border-white/10 text-white font-bold text-lg bg-transparent">
+                  <th key={a} className="p-4 text-center border-b border-l border-[var(--border)] text-[var(--text-primary)] font-bold text-lg">
                     {a}
                   </th>
                 ))}
@@ -82,18 +93,20 @@ export default function SolubilityRules() {
                   key={cation}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="hover:bg-white/5 transition-colors border-b border-white/5"
+                  transition={{ delay: i * 0.03 }}
+                  className="hover:bg-[var(--bg-card)] transition-colors border-b border-[var(--border)] group"
                 >
-                  <td className="p-3 font-bold text-white text-lg">{cation}</td>
+                  <td className="p-4 font-bold text-[var(--text-primary)] text-lg sticky left-0 z-10 bg-[var(--bg-primary)] group-hover:bg-[var(--bg-card)] transition-colors border-r border-[var(--border)]">
+                    {cation}
+                  </td>
                   {filteredAnions.map(anion => {
                     const state = SOLUBILITY_MATRIX[cation][anion];
                     const isSelected = selectedPair?.cation === cation && selectedPair?.anion === anion;
                     return (
-                      <td key={anion} className="p-1">
+                      <td key={anion} className="p-2 border-l border-[var(--border)]">
                         <button
                           onClick={() => handleCellClick(cation, anion)}
-                          className={`w-full p-2 rounded-lg font-bold border transition-all ${LEGEND[state].color} ${isSelected ? 'ring-2 ring-white scale-105' : 'hover:scale-105'}`}
+                          className={`w-full p-3 rounded-xl font-bold border transition-all duration-300 ${LEGEND[state].color} ${isSelected ? 'ring-2 ring-sky-500 scale-[1.02] shadow-md' : 'hover:scale-[1.02] hover:shadow-sm'}`}
                         >
                           {state.toUpperCase()}
                         </button>
@@ -105,19 +118,19 @@ export default function SolubilityRules() {
             </tbody>
           </table>
           
-          <div className="flex gap-6 mt-6 justify-center text-sm font-medium">
+          <div className="flex flex-wrap gap-6 p-6 justify-center text-sm font-medium border-t border-[var(--border)] bg-[var(--bg-secondary)]">
             {Object.entries(LEGEND).map(([k, v]) => (
-               <div key={k} className="flex items-center gap-2">
-                 <span className={`w-6 h-6 rounded flex items-center justify-center font-bold text-xs ${v.color}`}>{k.toUpperCase()}</span>
-                 <span className="text-slate-400">{v.label}</span>
+               <div key={k} className="flex items-center gap-3">
+                 <span className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm shadow-sm ${v.color}`}>{k.toUpperCase()}</span>
+                 <span className="text-[var(--text-secondary)] tracking-wide">{v.label}</span>
                </div>
             ))}
           </div>
         </div>
 
         {/* Selected Details Panel */}
-        <div className="bg-slate-900/80 border border-slate-700 rounded-2xl p-6 h-fit sticky top-20">
-          <h4 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Compound Details</h4>
+        <div className="bg-[var(--bg-primary)] border border-[var(--border)] rounded-2xl p-6 h-fit sticky top-20 shadow-lg">
+          <h4 className="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-widest mb-4">Compound Details</h4>
           
           {selectedPair ? (
             <AnimatePresence mode="wait">
@@ -127,12 +140,11 @@ export default function SolubilityRules() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
               >
-                <div className="text-3xl font-bold font-['Space_Grotesk'] text-white mb-2">
+                <div className="text-4xl font-extrabold font-['Space_Grotesk'] text-[var(--text-primary)] mb-2 flex items-center gap-3">
                   {selectedPair.cation.replace(/[^a-zA-Z]/g, '')}{selectedPair.anion.replace(/[^a-zA-Z]/g, '')}
                 </div>
-                <div className="text-sm text-slate-400 mb-6">
-                  {/* Basic string manipulation for name, in real app we'd have a mapping */}
-                  Compound Name
+                <div className="text-sm text-[var(--text-secondary)] mb-8 flex items-center gap-2">
+                  <Info size={16} /> Ionic Compound Analysis
                 </div>
                 
                 <div className={`p-4 rounded-xl border ${LEGEND[selectedPair.state].color} mb-6`}>
@@ -147,24 +159,34 @@ export default function SolubilityRules() {
                 </div>
 
                 {selectedPair.state === 'I' && (
-                  <div className="relative w-full h-32 bg-slate-950 rounded-xl border border-slate-800 flex items-end justify-center overflow-hidden">
-                     {/* Fake precipitate animation */}
-                     <div className="w-16 h-20 border-b-2 border-l-2 border-r-2 border-white/20 rounded-b-lg relative overflow-hidden flex items-end">
-                       <div className="w-full h-full bg-blue-500/20" />
-                       <motion.div 
-                         initial={{ height: 0 }}
-                         animate={{ height: 20 }}
-                         transition={{ duration: 2 }}
-                         className="absolute bottom-0 w-full bg-slate-300 blur-[2px]" 
-                       />
+                  <div className="relative w-full h-40 bg-[var(--bg-secondary)] rounded-2xl border border-[var(--border)] flex items-center justify-center overflow-hidden shadow-inner">
+                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-500/10 pointer-events-none" />
+                     <div className="relative flex flex-col items-center">
+                       <Droplets className="text-sky-400 mb-2 opacity-50" size={24} />
+                       <div className="relative">
+                         <Beaker size={64} className="text-[var(--text-secondary)] stroke-1" />
+                         <motion.div 
+                           initial={{ height: 0, opacity: 0 }}
+                           animate={{ height: 24, opacity: 1 }}
+                           transition={{ duration: 1.5, ease: "easeOut" }}
+                           className="absolute bottom-[6px] left-[14px] w-[36px] bg-sky-500/20 rounded-b-lg flex items-end justify-center overflow-hidden" 
+                         >
+                           <motion.div 
+                             initial={{ height: 0 }}
+                             animate={{ height: 12 }}
+                             transition={{ duration: 2, delay: 0.5 }}
+                             className="w-[28px] bg-[var(--text-secondary)]/80 blur-[1px] rounded-full mb-1" 
+                           />
+                         </motion.div>
+                       </div>
                      </div>
-                     <span className="absolute top-2 left-2 text-[10px] text-slate-500 uppercase font-bold">Precipitation Demo</span>
+                     <span className="absolute top-3 left-4 text-[10px] text-[var(--text-secondary)] uppercase tracking-widest font-bold">Precipitation Demo</span>
                   </div>
                 )}
               </motion.div>
             </AnimatePresence>
           ) : (
-            <div className="text-center text-slate-500 py-10">
+            <div className="text-center text-[var(--text-secondary)] py-10">
               Select an ion pair from the table to see details.
             </div>
           )}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Flame, Droplets, Zap, Clock, ArrowRight } from 'lucide-react';
 import FlameTestExperiment from './FlameTestExperiment';
-// import AcidBaseTitration from './AcidBaseTitration'; // Placeholder for future
 
 const EXPERIMENTS = [
   {
@@ -11,7 +11,7 @@ const EXPERIMENTS = [
     difficulty: 'Beginner',
     time: '15 mins',
     desc: 'Identify unknown metal ions by observing their emission spectra when heated.',
-    icon: '🔥',
+    Icon: Flame,
     color: 'from-amber-500 to-rose-500'
   },
   {
@@ -21,7 +21,7 @@ const EXPERIMENTS = [
     difficulty: 'Intermediate',
     time: '30 mins',
     desc: 'Determine the unknown concentration of an acid using a standard base solution and phenolphthalein.',
-    icon: '💧',
+    Icon: Droplets,
     color: 'from-sky-400 to-indigo-500'
   },
   {
@@ -31,7 +31,7 @@ const EXPERIMENTS = [
     difficulty: 'Advanced',
     time: '20 mins',
     desc: 'Use electricity to split water into hydrogen and oxygen gas at the electrodes.',
-    icon: '⚡',
+    Icon: Zap,
     color: 'from-emerald-400 to-teal-600'
   }
 ];
@@ -72,35 +72,38 @@ export default function ExperimentsTab() {
             {/* Thumbnail Header */}
             <div className={`h-48 bg-gradient-to-br ${exp.color} relative overflow-hidden flex items-center justify-center`}>
               <div className="absolute inset-0 bg-black/10 transition-opacity group-hover:opacity-0" />
-              <motion.span 
-                className="text-7xl drop-shadow-2xl relative z-10"
+              <motion.div 
+                className="relative z-10 text-white drop-shadow-2xl"
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 transition={{ type: 'spring', stiffness: 300 }}
               >
-                {exp.icon}
-              </motion.span>
+                <exp.Icon size={72} strokeWidth={1.5} />
+              </motion.div>
             </div>
             
             <div className="p-6 md:p-8 flex flex-col flex-1">
-              <div className="flex justify-between items-center mb-5">
-                <span className="px-4 py-1.5 bg-[var(--bg-primary)] rounded-full text-xs font-bold text-[var(--text-primary)] tracking-wide uppercase break-words border border-[var(--border)]">
+              <div className="flex flex-wrap items-center gap-3 mb-5">
+                <span className="px-4 py-1.5 bg-[var(--bg-primary)] rounded-full text-xs font-bold text-[var(--text-primary)] tracking-wide uppercase border border-[var(--border)] shadow-sm">
                   {exp.category}
                 </span>
-                <span className="text-[var(--text-secondary)] text-sm font-semibold flex items-center gap-1 shrink-0 ml-2">
-                  ⏱️ {exp.time}
+                <span className="text-[var(--text-secondary)] text-sm font-semibold flex items-center gap-1.5">
+                  <Clock size={16} /> {exp.time}
                 </span>
               </div>
               
-              <h3 className="text-xl md:text-2xl font-bold text-[var(--text-primary)] mb-3 font-['Space_Grotesk'] group-hover:text-sky-500 transition-colors break-words leading-tight">{exp.title}</h3>
-              <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-6 md:mb-8 flex-1 whitespace-normal break-words">{exp.desc}</p>
+              <h3 className="text-xl md:text-2xl font-bold text-[var(--text-primary)] mb-3 font-['Space_Grotesk'] group-hover:text-sky-500 transition-colors break-words">{exp.title}</h3>
+              <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-6 md:mb-8 flex-1 break-words">{exp.desc}</p>
               
               <div className="flex justify-between items-center border-t border-[var(--border)] pt-6 mt-auto flex-wrap gap-4">
-                <span className={`text-sm font-extrabold uppercase tracking-widest ${exp.difficulty === 'Beginner' ? 'text-emerald-500' : exp.difficulty === 'Intermediate' ? 'text-amber-500' : 'text-rose-500'}`}>
-                  {exp.difficulty}
-                </span>
-                <button className="flex items-center gap-2 text-sky-500 text-sm font-bold group-hover:text-indigo-500 transition-colors">
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${exp.difficulty === 'Beginner' ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' : exp.difficulty === 'Intermediate' ? 'bg-amber-500 shadow-[0_0_8px_#f59e0b]' : 'bg-rose-500 shadow-[0_0_8px_#f43f5e]'}`} />
+                  <span className="text-sm font-bold text-[var(--text-secondary)] uppercase tracking-widest">
+                    {exp.difficulty}
+                  </span>
+                </div>
+                <button className="flex items-center gap-2 text-sky-500 text-sm font-bold group-hover:text-sky-400 transition-colors">
                   Start Lab 
-                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
             </div>

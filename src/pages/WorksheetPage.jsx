@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export default function VirtualLabPage() {
+export default function WorksheetPage() {
   return (
     <div style={{ 
       minHeight: '100vh', 
@@ -21,23 +21,25 @@ export default function VirtualLabPage() {
           <div style={{ 
             width: 80, 
             height: 80, 
-            background: 'linear-gradient(135deg, #e0f2fe, #bae6fd)', 
+            background: 'linear-gradient(135deg, #f3e8ff, #d8b4fe)', 
             borderRadius: 24, 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'center',
             margin: '0 auto 24px',
-            color: '#0369a1'
+            color: '#9333ea'
           }}>
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-              <line x1="8" y1="21" x2="16" y2="21" />
-              <line x1="12" y1="17" x2="12" y2="21" />
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
             </svg>
           </div>
-          <h1 style={{ fontSize: 36, fontWeight: 800, color: '#111827', marginBottom: 16 }}>Virtual Lab</h1>
+          <h1 style={{ fontSize: 36, fontWeight: 800, color: '#111827', marginBottom: 16 }}>Worksheet</h1>
           <p style={{ fontSize: 18, color: '#6b7280', lineHeight: 1.6, marginBottom: 40 }}>
-            Simulate chemistry experiments in a secure virtual environment.
+            Practice chemistry concepts with comprehensive interactive worksheets.
             This feature is currently under development.
           </p>
         </motion.div>
@@ -71,13 +73,13 @@ export default function VirtualLabPage() {
                   width: 12,
                   height: 12,
                   borderRadius: '50%',
-                  background: '#38bdf8'
+                  background: '#c084fc'
                 }}
               />
             ))}
           </div>
           <h3 style={{ fontSize: 20, fontWeight: 700, color: '#1f2937', marginBottom: 8 }}>Coming Soon!</h3>
-          <p style={{ color: '#9ca3af' }}>We are building the ultimate virtual chemistry experience.</p>
+          <p style={{ color: '#9ca3af' }}>We are building an interactive worksheet generator for your chemistry practice.</p>
         </motion.div>
       </div>
     </div>

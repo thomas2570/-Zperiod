@@ -44,7 +44,7 @@ export default function MyProgress() {
                   transition={{ delay: i * 0.1 }}
                   className={`flex items-center gap-4 p-4 rounded-2xl border ${isUnlocked ? 'bg-slate-800 border-slate-600' : 'bg-slate-900/50 border-slate-800 opacity-50 grayscale'}`}
                 >
-                  <div className={`w-12 h-12 rounded-full ${badge.color} flex items-center justify-center text-2xl shadow-lg`}>
+                  <div className={`w-12 h-12 shrink-0 rounded-full ${badge.color} flex items-center justify-center text-2xl shadow-lg`}>
                     {badge.icon}
                   </div>
                   <div>

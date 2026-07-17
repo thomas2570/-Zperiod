@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Filter, Flame, Magnet, ChevronRight, Play } from 'lucide-react';
 
 const METHODS = [
-  { id: 'filtration', name: 'Filtration', desc: 'Separates an insoluble solid from a liquid.' },
-  { id: 'evaporation', name: 'Evaporation', desc: 'Separates a soluble solid from a liquid by heating.' },
-  { id: 'magnetic', name: 'Magnetic Separation', desc: 'Separates magnetic materials (like iron) from non-magnetic ones.' },
+  { id: 'filtration', name: 'Filtration', desc: 'Separates an insoluble solid from a liquid.', icon: Filter },
+  { id: 'evaporation', name: 'Evaporation', desc: 'Separates a soluble solid from a liquid by heating.', icon: Flame },
+  { id: 'magnetic', name: 'Magnetic Separation', desc: 'Separates magnetic materials (like iron) from non-magnetic ones.', icon: Magnet },
 ];
 
 export default function SeparationMethods() {
@@ -12,162 +13,189 @@ export default function SeparationMethods() {
   const [isRunning, setIsRunning] = useState(false);
 
   const startAnimation = () => {
+    if (isRunning) return;
     setIsRunning(true);
     setTimeout(() => setIsRunning(false), 4000);
   };
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-3xl p-8 shadow-2xl backdrop-blur-lg">
-      <div className="mb-8">
-        <h3 className="text-2xl font-bold text-white font-['Space_Grotesk']">Separation Methods Lab</h3>
-        <p className="text-slate-400">Interactive mini-simulations for physical separation techniques.</p>
+    <div className="bg-[var(--bg-secondary)] border border-[var(--border)] rounded-3xl p-6 md:p-10 shadow-2xl backdrop-blur-lg w-full max-w-7xl mx-auto">
+      <div className="mb-10">
+        <h3 className="text-3xl font-bold text-[var(--text-primary)] font-['Space_Grotesk'] mb-2">Separation Methods Lab</h3>
+        <p className="text-[var(--text-secondary)]">Interactive high-fidelity simulations for physical separation techniques.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
+        <div className="flex flex-col gap-4">
           {METHODS.map(m => (
             <button
               key={m.id}
               onClick={() => { setActiveMethod(m.id); setIsRunning(false); }}
-              className={`text-left p-4 rounded-xl border transition-all ${
+              className={`text-left p-5 rounded-2xl border transition-all duration-300 group flex items-start gap-4 ${
                 activeMethod === m.id 
-                  ? 'bg-sky-500/20 border-sky-500/50 text-sky-400'
-                  : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-600'
+                  ? 'bg-sky-500/10 border-sky-500/50 shadow-[0_0_20px_rgba(14,165,233,0.1)]'
+                  : 'bg-[var(--bg-card)] border-[var(--border)] hover:border-sky-500/30'
               }`}
             >
-              <div className="font-bold text-lg text-white mb-1">{m.name}</div>
-              <div className="text-xs">{m.desc}</div>
+              <div className={`p-3 rounded-xl transition-colors ${activeMethod === m.id ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/30' : 'bg-[var(--bg-primary)] text-[var(--text-secondary)] group-hover:text-sky-400'}`}>
+                <m.icon size={24} strokeWidth={1.5} />
+              </div>
+              <div className="flex-1">
+                <div className={`font-bold text-lg mb-1 transition-colors ${activeMethod === m.id ? 'text-sky-500' : 'text-[var(--text-primary)] group-hover:text-sky-400'}`}>{m.name}</div>
+                <div className="text-sm text-[var(--text-secondary)] leading-relaxed">{m.desc}</div>
+              </div>
+              <div className={`mt-1 transition-transform duration-300 ${activeMethod === m.id ? 'translate-x-1 opacity-100 text-sky-500' : 'opacity-0 -translate-x-2'}`}>
+                 <ChevronRight size={20} />
+              </div>
             </button>
           ))}
         </div>
 
-        <div className="lg:col-span-2 bg-slate-950 rounded-2xl border border-slate-800 relative overflow-hidden flex flex-col items-center justify-center p-8 min-h-[400px]">
-          {/* Filtration Sim */}
+        <div className="lg:col-span-2 bg-[var(--bg-primary)] rounded-3xl border border-[var(--border)] relative overflow-hidden flex flex-col items-center justify-center p-8 min-h-[500px] shadow-inner">
           <AnimatePresence mode="wait">
             {activeMethod === 'filtration' && (
-              <motion.div key="filt" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="flex flex-col items-center relative">
-                {/* Funnel */}
-                <div className="w-0 h-0 border-l-[40px] border-l-transparent border-r-[40px] border-r-transparent border-t-[60px] border-t-white/30 relative z-10" />
-                <div className="w-4 h-12 bg-white/30 relative z-10" />
+              <motion.div key="filt" initial={{opacity:0, scale: 0.95}} animate={{opacity:1, scale: 1}} exit={{opacity:0, scale: 0.95}} transition={{duration:0.3}} className="flex flex-col items-center relative w-full h-full justify-center">
                 
-                {/* Beaker */}
-                <div className="w-24 h-24 border-b-2 border-l-2 border-r-2 border-white/20 rounded-b-lg relative mt-2 overflow-hidden flex items-end">
-                   <motion.div 
-                     initial={{ height: '0%' }}
-                     animate={{ height: isRunning ? '60%' : '0%' }}
-                     transition={{ duration: 3, delay: 0.5 }}
-                     className="w-full bg-blue-500/30"
-                   />
-                </div>
+                <div className="relative flex flex-col items-center mt-10">
+                  {/* Modern Filter Icon representation */}
+                  <Filter size={80} strokeWidth={1} className="text-[var(--text-secondary)] relative z-10" />
+                  
+                  {/* Beaker Below */}
+                  <div className="w-32 h-32 border-b-4 border-l-4 border-r-4 border-[var(--border)] rounded-b-2xl relative mt-4 overflow-hidden flex items-end">
+                     <motion.div 
+                       initial={{ height: '0%' }}
+                       animate={{ height: isRunning ? '70%' : '0%' }}
+                       transition={{ duration: 4, ease: "linear" }}
+                       className="w-full bg-blue-500/20"
+                     >
+                       <div className="w-full h-1 bg-white/30 absolute top-0" />
+                     </motion.div>
+                  </div>
 
-                {/* Dripping Water */}
-                {isRunning && (
+                  {/* High-fidelity Dripping Water */}
+                  {isRunning && (
+                    <motion.div 
+                      animate={{ y: [0, 60], opacity: [1, 0] }}
+                      transition={{ repeat: Infinity, duration: 0.6, ease: "easeIn" }}
+                      className="absolute top-[85px] w-2 h-4 bg-blue-400/80 rounded-full blur-[1px] shadow-[0_0_10px_rgba(96,165,250,0.8)] z-0"
+                    />
+                  )}
+
+                  {/* Impurities trapped in filter */}
                   <motion.div 
-                    animate={{ y: [0, 40], opacity: [1, 0] }}
-                    transition={{ repeat: Infinity, duration: 0.5 }}
-                    className="absolute top-[80px] w-1 h-3 bg-blue-400 rounded-full z-0"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: isRunning ? 1 : 0 }}
+                    transition={{ delay: 2, duration: 2 }}
+                    className="absolute top-[40px] w-12 h-6 bg-amber-600/40 rounded-full blur-md z-20"
                   />
-                )}
-
-                {/* Sand left in funnel */}
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: isRunning ? 1 : 0 }}
-                  transition={{ delay: 2.5 }}
-                  className="absolute top-[20px] w-10 h-4 bg-amber-600/80 rounded-full blur-[2px] z-20"
-                />
+                </div>
               </motion.div>
             )}
 
             {/* Evaporation Sim */}
             {activeMethod === 'evaporation' && (
-              <motion.div key="evap" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="flex flex-col items-center relative">
-                {/* Vapor */}
-                {isRunning && (
-                  <div className="absolute top-[-40px] flex gap-4">
-                    {[1,2,3].map(i => (
-                      <motion.div 
-                        key={i}
-                        animate={{ y: -40, opacity: [0, 0.5, 0], scale: [1, 1.5] }}
-                        transition={{ repeat: Infinity, duration: 2, delay: i * 0.3 }}
-                        className="w-4 h-4 bg-white/20 rounded-full blur-md"
-                      />
-                    ))}
-                  </div>
-                )}
-                
-                {/* Dish */}
-                <div className="w-32 h-10 border-b-2 border-white/40 rounded-b-full relative overflow-hidden flex items-end justify-center">
-                  <motion.div 
-                    initial={{ height: '80%' }}
-                    animate={{ height: isRunning ? '0%' : '80%' }}
-                    transition={{ duration: 3 }}
-                    className="w-full bg-blue-500/50 absolute bottom-0"
-                  />
-                  <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: isRunning ? 1 : 0 }}
-                    transition={{ duration: 1, delay: 2.5 }}
-                    className="w-20 h-4 bg-white/90 blur-[1px] absolute bottom-1 rounded-full"
-                  />
-                </div>
-                
-                {/* Bunsen Burner */}
-                <div className="w-4 h-12 bg-slate-600 mt-4 relative">
+              <motion.div key="evap" initial={{opacity:0, scale: 0.95}} animate={{opacity:1, scale: 1}} exit={{opacity:0, scale: 0.95}} transition={{duration:0.3}} className="flex flex-col items-center relative w-full h-full justify-center">
+                <div className="relative flex flex-col items-center">
+                  
+                  {/* Vapor Particles */}
                   {isRunning && (
-                    <motion.div 
-                      animate={{ scaleY: [0.9, 1.1, 1] }}
-                      transition={{ repeat: Infinity, duration: 0.2 }}
-                      className="absolute top-[-24px] left-[-4px] w-6 h-6 bg-blue-500 rounded-full blur-[2px] opacity-80"
-                      style={{ transformOrigin: 'bottom' }}
-                    />
+                    <div className="absolute top-[-80px] flex gap-6">
+                      {[1,2,3,4].map(i => (
+                        <motion.div 
+                          key={i}
+                          animate={{ y: -60, opacity: [0, 0.4, 0], scale: [1, 2] }}
+                          transition={{ repeat: Infinity, duration: 2.5, delay: i * 0.4 }}
+                          className="w-8 h-8 bg-sky-200/20 rounded-full blur-xl"
+                        />
+                      ))}
+                    </div>
                   )}
+                  
+                  {/* Modern Evaporating Dish */}
+                  <div className="w-48 h-16 border-b-4 border-[var(--border)] rounded-b-[100px] relative overflow-hidden flex items-end justify-center shadow-lg">
+                    <motion.div 
+                      initial={{ height: '80%' }}
+                      animate={{ height: isRunning ? '0%' : '80%' }}
+                      transition={{ duration: 4, ease: "easeInOut" }}
+                      className="w-full bg-blue-500/30 absolute bottom-0"
+                    />
+                    {/* Crystallizing salt */}
+                    <motion.div 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: isRunning ? 1 : 0 }}
+                      transition={{ duration: 2, delay: 2.5 }}
+                      className="w-32 h-6 bg-white/80 blur-[2px] absolute bottom-1 rounded-[100px] shadow-[0_0_15px_rgba(255,255,255,0.5)]"
+                    />
+                  </div>
+                  
+                  {/* Burner Flame */}
+                  <div className="w-6 h-16 bg-[var(--text-secondary)] mt-8 relative rounded-t-sm shadow-md">
+                    {isRunning && (
+                      <motion.div 
+                        animate={{ scaleY: [0.9, 1.2, 1], scaleX: [0.9, 1.1, 0.9] }}
+                        transition={{ repeat: Infinity, duration: 0.15 }}
+                        className="absolute top-[-40px] left-[-10px] w-10 h-10 bg-blue-500 rounded-full blur-md opacity-90 mix-blend-screen"
+                        style={{ transformOrigin: 'bottom' }}
+                      >
+                         <div className="w-6 h-6 bg-cyan-300 absolute bottom-0 left-2 rounded-full blur-sm" />
+                      </motion.div>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             )}
 
             {/* Magnetic Sim */}
             {activeMethod === 'magnetic' && (
-              <motion.div key="mag" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="flex flex-col items-center relative h-[200px]">
+              <motion.div key="mag" initial={{opacity:0, scale: 0.95}} animate={{opacity:1, scale: 1}} exit={{opacity:0, scale: 0.95}} transition={{duration:0.3}} className="flex flex-col items-center relative w-full h-full justify-center h-[300px]">
+                
+                {/* Advanced Magnet Graphic */}
+                <motion.div 
+                  initial={{ y: -150 }}
+                  animate={{ y: isRunning ? -40 : -150 }}
+                  transition={{ duration: 0.8, type: 'spring', bounce: 0.4 }}
+                  className="absolute top-0 z-20 flex flex-col items-center"
+                >
+                  <Magnet size={100} strokeWidth={1} className="text-rose-500 fill-rose-500/10 drop-shadow-[0_10px_20px_rgba(244,63,94,0.3)] rotate-180" />
+                  
+                  {/* Magnetic Field Lines */}
+                  {isRunning && (
+                    <motion.div 
+                      animate={{ opacity: [0, 0.5, 0], scale: [0.8, 1.2] }}
+                      transition={{ repeat: Infinity, duration: 1 }}
+                      className="w-32 h-16 border-t-2 border-rose-500/30 rounded-t-full absolute bottom-[-20px] blur-sm"
+                    />
+                  )}
+                </motion.div>
+
                 {/* Mixture pile */}
-                <div className="absolute bottom-0 w-32 h-10 bg-amber-100/20 rounded-t-full flex items-center justify-center overflow-hidden">
+                <div className="absolute bottom-10 w-48 h-16 bg-amber-100/10 rounded-t-[100px] flex items-center justify-center overflow-hidden border border-[var(--border)] border-b-0 shadow-inner">
                    {/* Iron filings */}
-                   {[...Array(20)].map((_, i) => (
+                   {[...Array(30)].map((_, i) => (
                      <motion.div
                        key={i}
                        initial={{ y: 0, x: 0 }}
                        animate={{ 
-                         y: isRunning ? -60 : 0, 
-                         x: isRunning ? (Math.random() - 0.5) * 20 : 0 
+                         y: isRunning ? -120 : 0, 
+                         x: isRunning ? (Math.random() - 0.5) * 40 : 0 
                        }}
-                       transition={{ duration: 0.5, delay: Math.random() * 0.2 }}
-                       className="absolute w-2 h-1 bg-slate-400 rounded-full"
-                       style={{ left: `${20 + Math.random() * 60}%`, bottom: `${Math.random() * 20}px`, transform: `rotate(${Math.random() * 180}deg)` }}
+                       transition={{ duration: 0.6, delay: Math.random() * 0.3, ease: "easeIn" }}
+                       className="absolute w-3 h-1 bg-[var(--text-primary)] rounded-full shadow-lg"
+                       style={{ left: `${15 + Math.random() * 70}%`, bottom: `${Math.random() * 30}px`, transform: `rotate(${Math.random() * 180}deg)` }}
                      />
                    ))}
                 </div>
-
-                {/* Magnet */}
-                <motion.div 
-                  initial={{ y: -100 }}
-                  animate={{ y: isRunning ? -30 : -100 }}
-                  transition={{ duration: 0.5 }}
-                  className="absolute top-0 w-16 h-20 border-[8px] border-rose-500 rounded-t-full flex justify-between"
-                  style={{ borderBottom: 'none' }}
-                >
-                  <div className="w-4 h-4 bg-slate-200 absolute bottom-[-8px] left-[-8px]" />
-                  <div className="w-4 h-4 bg-slate-200 absolute bottom-[-8px] right-[-8px]" />
-                </motion.div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          <div className="absolute bottom-6 flex gap-4">
+          <div className="absolute bottom-6 md:bottom-8 flex gap-4 w-full px-8">
             <button 
               onClick={startAnimation}
               disabled={isRunning}
-              className="px-6 py-2 bg-[#00e5ff] text-slate-900 font-bold rounded-full disabled:opacity-50 hover:shadow-[0_0_15px_rgba(0,229,255,0.5)] transition-all"
+              className="flex-1 py-4 bg-sky-500 text-white font-bold rounded-2xl disabled:opacity-50 hover:shadow-[0_0_20px_rgba(14,165,233,0.4)] hover:bg-sky-400 transition-all flex items-center justify-center gap-2"
             >
+              <Play size={20} fill="currentColor" />
               {isRunning ? 'Running Simulation...' : 'Start Separation'}
             </button>
           </div>

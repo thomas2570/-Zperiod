@@ -3,51 +3,38 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :root {
-  --zp-bg-color: #fdfbf7;
-  --zp-element-bg: #f5efe6;
-  --zp-element-hover: #ebe0d0;
-  --zp-text-primary: #2c2420;
-  --zp-text-secondary: #5d544f;
-  --zp-border-color: rgba(0, 0, 0, 0.06);
-  
-  --bg-primary: var(--zp-bg-color);
-  --bg-secondary: var(--zp-element-bg);
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
   --bg-card: rgba(255, 255, 255, 0.65);
-  --border: var(--zp-border-color);
-  --text-primary: var(--zp-text-primary);
-  --text-secondary: var(--zp-text-secondary);
+  --border: rgba(15, 23, 42, 0.06);
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
   --accent: #3b82f6;
   --accent-glow: rgba(59, 130, 246, 0.2);
 
   /* Soft Pastel Category Colors */
-  --alkali: #fecdd3;
-  --alkaline-earth: #fed7aa;
-  --transition-metal: #bbf7d0;
-  --post-transition: #bae6fd;
-  --metalloid: #e9d5ff;
-  --nonmetal: #ccfbf1;
-  --halogen: #fef08a;
-  --noble-gas: #fbcfe8;
-  --lanthanide: #fcd34d;
-  --actinide: #d8b4fe;
-  --unknown: #e2e8f0;
+  --alkali: #fecdd3; /* Rose */
+  --alkaline-earth: #fed7aa; /* Orange */
+  --transition-metal: #bbf7d0; /* Mint/Green - like video */
+  --post-transition: #bae6fd; /* Sky */
+  --metalloid: #e9d5ff; /* Purple */
+  --nonmetal: #ccfbf1; /* Teal */
+  --halogen: #fef08a; /* Yellow */
+  --noble-gas: #fbcfe8; /* Pink */
+  --lanthanide: #fcd34d; /* Amber */
+  --actinide: #d8b4fe; /* Deep light purple */
+  --unknown: #e2e8f0; /* Gray */
 }
 
-/* ── Dark Mode Toggle (True Zperiod Design) ───────────────────── */
-html.dark-theme, html.dark {
-  --zp-bg-color: #0e0e12;
-  --zp-element-bg: #1a1a22;
-  --zp-element-hover: #2a2a36;
-  --zp-text-primary: #e8e6f0;
-  --zp-text-secondary: #9a97a8;
-  --zp-border-color: rgba(255, 255, 255, 0.06);
-
-  --bg-primary: var(--zp-bg-color);
-  --bg-secondary: var(--zp-element-bg);
-  --text-primary: var(--zp-text-primary);
-  --text-secondary: var(--zp-text-secondary);
-  --border: var(--zp-border-color);
-  --bg-card: rgba(26, 26, 34, 0.7);
+/* ── Dark Mode Toggle ───────────────────────────────────────────── */
+html.dark-theme {
+  filter: invert(1) hue-rotate(180deg) brightness(1.1);
+}
+/* Re-invert media/canvas/SVGs to preserve exact coloring where needed */
+html.dark-theme img,
+html.dark-theme canvas,
+html.dark-theme .keep-color {
+  filter: invert(1) hue-rotate(180deg);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }

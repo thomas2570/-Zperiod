@@ -11,6 +11,7 @@ import GasLawsPage from './pages/GasLawsPage';
 import IonsPage from './pages/IonsPage';
 import SettingsPage from './pages/SettingsPage';
 import VirtualLabPage from './pages/VirtualLabPage';
+import WorksheetPage from './pages/WorksheetPage';
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
                 <Route path="/solubility" element={<SolubilityPage />} />
                 <Route path="/gas-laws" element={<GasLawsPage />} />
                 <Route path="/virtual-lab" element={<VirtualLabPage />} />
+                <Route path="/worksheet" element={<WorksheetPage />} />
               </Routes>
           </main>
         </div>
