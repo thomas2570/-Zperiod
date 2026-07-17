@@ -10,6 +10,7 @@ import SolubilityPage from './pages/SolubilityPage';
 import GasLawsPage from './pages/GasLawsPage';
 import IonsPage from './pages/IonsPage';
 import SettingsPage from './pages/SettingsPage';
+import VirtualLabPage from './pages/VirtualLabPage';
 
 export default function App() {
   return (
@@ -27,6 +28,7 @@ export default function App() {
                 <Route path="/molar-mass" element={<MolarMassPage />} />
                 <Route path="/solubility" element={<SolubilityPage />} />
                 <Route path="/gas-laws" element={<GasLawsPage />} />
+                <Route path="/virtual-lab" element={<VirtualLabPage />} />
               </Routes>
           </main>
         </div>
